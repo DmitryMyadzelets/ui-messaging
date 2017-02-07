@@ -1,0 +1,27 @@
+{
+  "name": "ui-messaging",
+  "version": "1.0.0",
+  "description": "User interface for a web applicatoin like chat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DmitryMyadzelets/ui-messaging.git"
+  },
+  "keywords": [
+    "chat",
+    "ui",
+    "messaging"
+  ],
+  "author": "Dmitry Myadzelets",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DmitryMyadzelets/ui-messaging/issues"
+  },
+  "homepage": "https://github.com/DmitryMyadzelets/ui-messaging#readme",
+  "dependencies": {
+    "shortid": "^2.2.6"
+  }
+}
