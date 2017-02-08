@@ -2,7 +2,7 @@
 
 User interface for a web applicatoin like chat.
 
-(See it working)[https://dmitrymyadzelets.github.io/ui-messaging/]
+[See it working](https://dmitrymyadzelets.github.io/ui-messaging/)
 
 ## Message structure
 
