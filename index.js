@@ -227,7 +227,7 @@ Messenger.prototype.updateMessages = function (parent) {
         .data(function (d) {
             return d.values;
         }, function (d) {
-            return d.uid;
+            return d.id;
         });
 
     message.exit().remove();
