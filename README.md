@@ -2,6 +2,8 @@
 
 User interface for a web applicatoin like chat.
 
+(See it working)[https://dmitrymyadzelets.github.io/ui-messaging/]
+
 ## Message structure
 
     {
@@ -13,7 +15,7 @@ User interface for a web applicatoin like chat.
 
 # Source code
 
-
+The script for the example:
 
     browserify index.js example.js -o messaging.js
 
