@@ -24,7 +24,7 @@ header {
     text-align: center;
     color: #ECEFF1;
     background-color: rgba(38, 50, 56, 0.9);
-    box-shadow: 0 .2em .3em #888;
+    box-shadow: 0 2px 3px #888;
 }
 
 footer {
@@ -35,15 +35,16 @@ footer {
     height: 8em;
     /* how */
     background-color: #37474F;
+    box-shadow: 0 -1px 3px #888;
 }
 
 .wrap-messages {
     margin: auto;
     max-width: 40em;
-    /* Top margin is equal to the height of the header */
-    margin-top: 4em;
-    /* Bottom margin is equal to the height of the footer */
-    margin-bottom: 8em;
+    /* Top padding is equal to the height of the header */
+    padding-top: 4em;
+    /* Bottom padding is equal to the height of the footer */
+    padding-bottom: 8em;
     background-color: white;
 }
 

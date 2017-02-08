@@ -7,7 +7,7 @@ var lipsum = require('lorem-ipsum');
 
 
 var authors = ['Alice', 'Bob'];
-var nMessages = 10;
+var nMessages = 20;
 
 
 // Returns a message object with random data
