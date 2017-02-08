@@ -74,6 +74,13 @@ var defaultConfig = {
         messages: '#messages'
     },
 
+    classes: {
+        day: 'messages_day_group',
+        day_header: 'messages_day',
+        author: 'messages_author_group',
+        my_messages: 'messages_are_mine'
+    },
+
     // Data used for rendering messages
     data: {
         messages: [],
@@ -126,7 +133,6 @@ var nestMessages = (function () {
 
 // Returns string representing a day, given unixTime
 function getDayString(d) {
-    console.log(d);
     d = +d.key;
     var date = new Date(d);
     var today = new Date().setHours(0, 0, 0, 0);
@@ -169,7 +175,7 @@ function sortComparator(a, b) {
 
 Messenger.prototype.update = function () {
 
-    var config = this.config; // shortcat
+    var config = this.config; // short-cut
 
     // Data preparation
 
@@ -183,61 +189,85 @@ Messenger.prototype.update = function () {
         console.warn('Can\'t find the DOM element: ', config.ids.messages);
     }
 
-    // Rendering tree
+    // DOM tree
 
     //      div.messages
-    //          div.messages_day_group
+    // 1        div.messages_day_group
     //              div.messages_day
-    //              div.messages_author_group
+    // 2            div.messages_author_group .messages_are_mine
+    // 3                div.message .message_is_my .same_author .same_time
+    //                      div.message_time
+    //                      div.message_left_part
+    //                          div.message_author
+    //                          div.message_body
 
-    // Day
+    var days = this.updateDays(root, data.days);
+    var author = this.updateAuthors(days);
+    this.updateMessages(author);
 
-    var day = root.selectAll('.messages_day_group')
-        .data(data.days, function (d) {
-            return d.key;
-        });
-
-    day.exit().remove();
-
-    var enter = day.enter()
-        .append('div').attr('class', 'messages_day_group');
-
-    enter.append('div').attr('class', 'messages_day');
-
-    // Merge update and enter selections
-    day = enter.merge(day);
-
-    // Update day (make sense when the current day changes)
-    day.selectAll('.messages_day')
-        .text(this.getDayString);
-
-    // Make shure the user can see the last message
-    root.each(function () {
+    // Make sure the user can see the last message
+    d3.select('html').each(function () {
         // [selector].scrollIntoView();
+        console.log([this.scrollTop, this.scrollHeight]);
         this.scrollTop = this.scrollHeight;
     });
 
-    // Author
+};
 
-    var author = day.selectAll('.messages_author_group')
+
+Messenger.prototype.updateDays = function (parent, data) {
+    var classes = this.config.classes; // short-cut
+
+    var sel = parent.selectAll('.' + classes.day)
+        .data(data, function (d) {
+            return d.key;
+        });
+
+    sel.exit().remove();
+
+    var enter = sel.enter()
+        .append('div').attr('class', classes.day);
+
+    enter.append('div').attr('class', classes.day_header);
+
+    // Merge update and enter selections
+    sel = enter.merge(sel);
+
+    // Update the group header (make sense when the current day changes)
+    sel.selectAll('.' + classes.day_header).text(this.getDayString);
+
+    return sel;
+};
+
+
+Messenger.prototype.updateAuthors = function (parent) {
+    var self = this;
+    var classes = this.config.classes; // short-cut
+
+    var sel = parent.selectAll('.' + classes.author)
         .data(function (d) {
             return d.values;
         });
     // no need for key?
 
-    author.exit().remove();
+    sel.exit().remove();
 
-    enter = author.enter()
-        .append('div').attr('class', 'messages_author_group')
-        .classed('messages_are_mine', function (d) {
-            return d.key === config.me;
+    var enter = sel.enter()
+        .append('div').attr('class', classes.author)
+        .classed(classes.my_messages, function (d) {
+            return d.key === self.config.me;
         });
 
-    author = enter.merge(author);
+    sel = enter.merge(sel);
 
-    // Message
+    return sel;
+};
 
-    var message = author
+
+Messenger.prototype.updateMessages = function (parent) {
+    var config = this.config;
+
+    var message = parent
         .selectAll('.message')
         .data(function (d) {
             return d.values;
@@ -247,7 +277,7 @@ Messenger.prototype.update = function () {
 
     message.exit().remove();
 
-    enter = message.enter();
+    var enter = message.enter();
 
     var msg = enter.append('div').attr('class', 'message')
         .attr('id', function (d) {
@@ -294,8 +324,6 @@ Messenger.prototype.update = function () {
         .html(function (d) {
             return d.body;
         });
-
-    /*end*/
 };
 
 

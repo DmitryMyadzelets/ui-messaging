@@ -51,8 +51,10 @@ footer {
     max-width: 40em;
     padding: 8px;
     box-sizing: border-box;
-    background-color: #546E7A;
-    box-shadow: 0 -1px 3px #888;
+    /*background-color: #546E7A;*/
+    background-color: white;
+    border-top: solid 1px #546E7A;
+    /*box-shadow: 0 -1px 3px #888;*/
 }
 
 .wrap-messages {
