@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"> <!-- Set this to the main language of your site -->
+<html lang="en">
 <head>
     <meta charset="utf-8">
 
@@ -7,24 +7,28 @@
 
     <meta name="description" content="User interface for a web applicatoin like chat">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <link href="css/normalize.css" rel="stylesheet" media="all">
+    <link href="css/normalize.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="css/chat.css" rel="stylesheet">
+    
+    <script src="messaging.js"></script>
+
 </head>
 <body>
 
-    <header role="banner">
-        <h1>Chat</h1>
+    <header>
+        <h1>Messaging UI &mdash; Chat</h1>
     </header>
 
-    <div class="wrap">
-    	<div style='position: fixed; height: 80%; width: 100%;'>
-    		<div id='messages'>
-    		</div>
-		</div>
-		<div style='position: fixed; bottom: 0; height: 20%; width: 100%; border-top: 1px solid #c0cad5; padding: 1em;'>
-    		<div id='input_message' contenteditable='true' tabindex='0' class='my_message'>
-    		</div>
-		</div>
+    <div class="wrap-messages">
+        <div id='messages'>
+        </div>
     </div>
+
+    <footer>
+        <div id='input_message' contenteditable='true' tabindex='0'>
+        </div>
+    </footer>
 
 </body>
 </html>

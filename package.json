@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/DmitryMyadzelets/ui-messaging#readme",
   "dependencies": {
+    "d3-selection": "^1.0.3",
+    "lorem-ipsum": "^1.0.3",
     "shortid": "^2.2.6"
   }
 }

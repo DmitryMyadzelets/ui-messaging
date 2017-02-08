@@ -2,9 +2,15 @@
 /*global d3*/
 'use strict';
 
-var config = {
-    locale: 'ru',
-    me: 'Bob',
+// Get d3 selection module only
+// See (how to use d3 modules)[https://github.com/d3/d3/blob/master/README.md]
+var d3 = Object.assign({}, require('d3-selection'));
+
+
+var defaultConfig = {
+    me: 'Bob', // User's id
+
+    // Localization
     l10n: {
         today: {
             undefined: 'Today',
@@ -12,45 +18,25 @@ var config = {
             ru: 'Сегодня'
         },
         placeholder: {
-            undefined: 'Enter your message here',
+            undefined: 'Enter your message here...',
             it: 'Scriva il suo messagio qui...',
             ru: 'Напишите сообщение...'
         }
+    },
+
+    // DOM ids
+    ids: {
+        messages: '#messages'
+    },
+
+    // Data used for rendering messages
+    data: {
+        messages: [],
+        days: []
     }
 };
 
 // Helpers
-
-// Returns localized string
-function l10n(key) {
-    return config.l10n[key][config.locale] || config.l10n[key][undefined];
-}
-
-
-
-// Returns formatted day string from unixTime
-function getDayString(d) {
-    d = +d.key;
-    var date = new Date(d);
-    var today = new Date().setHours(0, 0, 0, 0);
-    var day = date.toLocaleDateString(config.locale, {
-        //weekday: 'short',
-        //year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-    if (d === today) {
-        return l10n('today');
-    }
-    return day;
-}
-
-// Data used for rendering messages
-var data = {
-    messages: [],
-    days: []
-};
-
 
 // Given an array of messages,
 // returns an array of 2-level nested messages.
@@ -93,19 +79,74 @@ var nestMessages = (function () {
 }());
 
 
-function update() {
-    // Sort messages
-    data.messages = data.messages.sort(function (a, b) {
-        return b.date < a.date;
+// Returns string representing a day, given unixTime
+function getDayString(d) {
+    console.log(d);
+    d = +d.key;
+    var date = new Date(d);
+    var today = new Date().setHours(0, 0, 0, 0);
+    var day = date.toLocaleDateString(this.config.locale, {
+        //weekday: 'short',
+        //year: 'numeric',
+        month: 'long',
+        day: 'numeric'
     });
+    if (d === today) {
+        return this.l10n('today');
+    }
+    return day;
+}
 
+
+function Messenger(config) {
+    // Make own config s.t. the defaults remain intact for other instances
+    this.config = Object.create(defaultConfig);
+
+    this.getDayString = getDayString.bind(this);
+
+    Object.assign(this.config, config);
+}
+
+
+// Helpers
+
+// Returns localized string from config
+Messenger.prototype.l10n = function (key) {
+    return this.config.l10n[key][this.config.locale] || this.config.l10n[key][undefined];
+};
+
+
+
+function sortComparator(a, b) {
+    return b.date < a.date;
+}
+
+
+Messenger.prototype.update = function () {
+
+    var config = this.config; // shortcat
+
+    // Data preparation
+
+    var data = {};
+    data.messages = config.data.messages.sort(sortComparator);
     data.days = nestMessages(data.messages);
 
-    var root = d3.select('#messages');
+    var root = d3.select(config.ids.messages);
+
+    if (!root.size()) {
+        console.warn('Can\'t find the DOM element: ', config.ids.messages);
+    }
+
+    // Rendering tree
+
+    //      div.messages
+    //          div.messages_day_group
+    //              div.messages_day
+    //              div.messages_author_group
 
     // Day
 
-    // Day join
     var day = root.selectAll('.messages_day_group')
         .data(data.days, function (d) {
             return d.key;
@@ -123,7 +164,13 @@ function update() {
 
     // Update day (make sense when the current day changes)
     day.selectAll('.messages_day')
-        .text(getDayString);
+        .text(this.getDayString);
+
+    // Make shure the user can see the last message
+    root.each(function () {
+        // [selector].scrollIntoView();
+        this.scrollTop = this.scrollHeight;
+    });
 
     // Author
 
@@ -203,13 +250,13 @@ function update() {
             return d.body;
         });
 
-    /**/
+    /*end*/
+};
+
+
+function chat(config) {
+    return new Messenger(config);
 }
 
-update();
 
-// Make shure the user can see the last message
-d3.select('#messages').each(function () {
-    // [selector].scrollIntoView();
-    this.scrollTop = this.scrollHeight;
-});
+exports.chat = chat;
