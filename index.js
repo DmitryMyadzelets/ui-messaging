@@ -175,14 +175,6 @@ Messenger.prototype.update = function () {
     var days = this.updateDays(root, nested);
     var author = this.updateAuthors(days);
     this.updateMessages(author);
-
-    // Make sure the user can see the last message
-    d3.select('html').each(function () {
-        // [selector].scrollIntoView();
-        console.log([this.scrollTop, this.scrollHeight]);
-        this.scrollTop = this.scrollHeight;
-    });
-
 };
 
 
@@ -296,6 +288,28 @@ Messenger.prototype.updateMessages = function (parent) {
         .html(function (d) {
             return d.body;
         });
+};
+
+
+// Returns true if the DOM element is scrollable
+function scrollable(element) {
+    return element.scrollHeight > element.clientHeight;
+}
+
+
+// Scrolls down the messages
+Messenger.prototype.scrollDown = function () {
+    var e = d3.select(this.config.ids.messages).node();
+
+    // Find which container should be scrolled
+    while (e && !scrollable(e)) {
+        e = e.parentNode;
+    }
+
+    d3.select(e).each(function () {
+        // [selector].scrollIntoView();
+        this.scrollTop = this.scrollHeight;
+    });
 };
 
 

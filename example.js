@@ -37,6 +37,7 @@ function init() {
     });
 
     chat.update();
+    chat.scrollDown();
 }
 
 document.addEventListener("DOMContentLoaded", init);
