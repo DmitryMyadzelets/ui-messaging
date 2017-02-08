@@ -33,7 +33,15 @@ var defaultConfig = {
         day: 'messages_day_group',
         day_header: 'messages_day',
         author: 'messages_author_group',
-        my_messages: 'messages_are_mine'
+        my_messages: 'messages_are_mine',
+        message: 'message',
+        my_message: 'message_is_my',
+        same_author: 'same_author',
+        same_time: 'same_time',
+        message_time: 'message_time',
+        message_block: 'message_left_part',
+        message_author: 'message_author',
+        message_body: 'message_body'
     },
 
     // Data used for rendering messages
@@ -47,7 +55,16 @@ var defaultConfig = {
 
 // Given an array of messages,
 // returns an array of 2-level nested messages.
-// Nests messages considering their day and author.
+// Nests messages considering their day and author:
+// [{
+//     key: Number // day
+//     values: [{
+//             key: Number // author
+//             values: [{
+//                 message: Object
+//             }]
+//         }]
+// }]
 var nestMessages = (function () {
     // Nests a message into array considering its author
     function nestAuthor(message, array) {
@@ -221,9 +238,10 @@ Messenger.prototype.updateAuthors = function (parent) {
 
 Messenger.prototype.updateMessages = function (parent) {
     var config = this.config;
+    var classes = config.classes;
 
     var message = parent
-        .selectAll('.message')
+        .selectAll('.' + classes.message)
         .data(function (d) {
             return d.values;
         }, function (d) {
@@ -234,18 +252,18 @@ Messenger.prototype.updateMessages = function (parent) {
 
     var enter = message.enter();
 
-    var msg = enter.append('div').attr('class', 'message')
+    var msg = enter.append('div').attr('class', classes.message)
         .attr('id', function (d) {
             return d.uid;
         })
-        .classed('message_is_my', function (d) {
+        .classed(classes.my_message, function (d) {
             return d.author === config.me;
         })
-        .classed('same_author', function (d, i) {
+        .classed(classes.same_author, function (d, i) {
             var pd = d3.select(this.parentNode).datum();
             return i > 0 && pd.values[i - 1].author === d.author;
         })
-        .classed('same_time', function (d, i) {
+        .classed(classes.same_time, function (d, i) {
             if (i > 0) {
                 var pd = d3.select(this.parentNode).datum();
                 // same author
@@ -256,7 +274,7 @@ Messenger.prototype.updateMessages = function (parent) {
             }
         });
 
-    msg.append('div').attr('class', 'message_time')
+    msg.append('div').attr('class', classes.message_time)
         .text(function (d) {
             var date = new Date(+d.date);
             var time = date.toLocaleTimeString(config.locale, {
@@ -266,16 +284,16 @@ Messenger.prototype.updateMessages = function (parent) {
             return time;
         });
 
-    var left = msg.append('div').attr('class', 'message_left_part');
+    var left = msg.append('div').attr('class', classes.message_block);
 
     left.append('div')
-        .classed('message_author', true)
+        .classed(classes.message_author, true)
         .text(function (d) {
             return d.author;
         });
 
     left.append('div')
-        .classed('message_body', true)
+        .classed(classes.message_body, true)
         .html(function (d) {
             return d.body;
         });
