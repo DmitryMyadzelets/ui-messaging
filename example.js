@@ -6,8 +6,8 @@ var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
 
 
-var authors = ['Alice', 'Bob'];
-var nMessages = 20;
+var authors = ['Alice', 'Bob', 'Lorem Ipsum'];
+var nMessages = 20; // Number of messages
 
 
 // Returns a message object with random data
@@ -26,9 +26,9 @@ function createMessage() {
 
 // Create a few chat messages
 
-var data = {};
-// Create random messages, and sort them by date
-data.messages = Array.apply(null, Array(nMessages)).map(createMessage);
+var data = {
+    messages: Array.apply(null, Array(nMessages)).map(createMessage)
+};
 
 
 function init() {

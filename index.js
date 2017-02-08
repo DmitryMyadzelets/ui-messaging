@@ -165,8 +165,8 @@ Messenger.prototype.update = function () {
     //      div.messages
     // 1        div.messages_day_group
     //              div.messages_day
-    // 2            div.messages_author_group .messages_are_mine
-    // 3                div.message .message_is_my .same_author .same_time
+    // 2            div.messages_author_group [.my_messages]
+    // 3                div.message [.my_message .same_author .same_time]
     //                      div.message_time
     //                      div.message_left_part
     //                          div.message_author
@@ -228,6 +228,7 @@ Messenger.prototype.updateAuthors = function (parent) {
 
 
 Messenger.prototype.updateMessages = function (parent) {
+
     var config = this.config;
     var classes = config.classes;
 
