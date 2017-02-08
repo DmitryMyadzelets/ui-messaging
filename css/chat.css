@@ -1,0 +1,61 @@
+
+#messages {
+    overflow-y: auto;
+    height: 100%;
+    cursor: text;
+}
+
+.messages_author_group {
+    padding: .5em 1em;
+    margin: 8px;
+    border-radius: 2px;
+    background-color: #CFD8DC;
+}
+
+.messages_are_mine {
+    margin-left: 2em;
+    background-color: inherit;
+    background-color: white;
+}
+
+.messages_day {
+    color: rgba(0, 0, 0, .5);
+    text-align: center;
+    padding: 1em 0;
+}
+
+.message_left_part {
+    overflow: hidden;
+}
+
+.message_time {
+    float: right;
+    margin-left: 1em;
+}
+
+
+.message_author {
+    color: #90A4AE;
+    font-weight: 600; 
+    margin-bottom: 8px;
+}
+.message_time {
+    color: rgba(0, 0, 0, .3);
+    font-size: small;
+}
+
+.message_is_my .message_author {
+    display: none;
+}
+
+.same_author .message_author {
+    display: none;
+}
+
+.same_time .message_time {
+    display: none;
+}
+
+.message {
+    padding: .5em 0;
+}
