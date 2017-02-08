@@ -29,13 +29,14 @@ var defaultConfig = {
         messages: '#messages'
     },
 
+    // DOM classes
     classes: {
-        day: 'messages_day_group',
+        day_group: 'messages_day_group',
         day_header: 'messages_day',
-        author: 'messages_author_group',
-        my_messages: 'messages_are_mine',
+        author_group: 'messages_author_group',
+        my_messages: 'my_messages',
         message: 'message',
-        my_message: 'message_is_my',
+        my_message: 'my_message',
         same_author: 'same_author',
         same_time: 'same_time',
         message_time: 'message_time',
@@ -44,10 +45,9 @@ var defaultConfig = {
         message_body: 'message_body'
     },
 
-    // Data used for rendering messages
+    // Data used for updating and rendering messages
     data: {
-        messages: [],
-        days: []
+        messages: []
     }
 };
 
@@ -151,9 +151,8 @@ Messenger.prototype.update = function () {
 
     // Data preparation
 
-    var data = {};
-    data.messages = config.data.messages.sort(sortComparator);
-    data.days = nestMessages(data.messages);
+    var messages = config.data.messages.sort(sortComparator);
+    var nested = nestMessages(messages);
 
     var root = d3.select(config.ids.messages);
 
@@ -173,7 +172,7 @@ Messenger.prototype.update = function () {
     //                          div.message_author
     //                          div.message_body
 
-    var days = this.updateDays(root, data.days);
+    var days = this.updateDays(root, nested);
     var author = this.updateAuthors(days);
     this.updateMessages(author);
 
@@ -190,7 +189,7 @@ Messenger.prototype.update = function () {
 Messenger.prototype.updateDays = function (parent, data) {
     var classes = this.config.classes; // short-cut
 
-    var sel = parent.selectAll('.' + classes.day)
+    var sel = parent.selectAll('.' + classes.day_group)
         .data(data, function (d) {
             return d.key;
         });
@@ -198,7 +197,7 @@ Messenger.prototype.updateDays = function (parent, data) {
     sel.exit().remove();
 
     var enter = sel.enter()
-        .append('div').attr('class', classes.day);
+        .append('div').attr('class', classes.day_group);
 
     enter.append('div').attr('class', classes.day_header);
 
@@ -216,7 +215,7 @@ Messenger.prototype.updateAuthors = function (parent) {
     var self = this;
     var classes = this.config.classes; // short-cut
 
-    var sel = parent.selectAll('.' + classes.author)
+    var sel = parent.selectAll('.' + classes.author_group)
         .data(function (d) {
             return d.values;
         });
@@ -225,7 +224,7 @@ Messenger.prototype.updateAuthors = function (parent) {
     sel.exit().remove();
 
     var enter = sel.enter()
-        .append('div').attr('class', classes.author)
+        .append('div').attr('class', classes.author_group)
         .classed(classes.my_messages, function (d) {
             return d.key === self.config.me;
         });

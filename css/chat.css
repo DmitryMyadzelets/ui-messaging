@@ -12,7 +12,7 @@
     background-color: #CFD8DC;
 }
 
-.messages_are_mine {
+.my_messages {
     margin-left: 2em;
     background-color: inherit;
     background-color: white;
@@ -44,7 +44,7 @@
     font-size: small;
 }
 
-.message_is_my .message_author {
+.my_message .message_author {
     display: none;
 }
 
