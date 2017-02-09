@@ -6,6 +6,13 @@
 // See (how to use d3 modules)[https://github.com/d3/d3/blob/master/README.md]
 var d3 = Object.assign({}, require('d3-selection'));
 
+// Hack to get the d3.event:
+// https://github.com/d3/d3/issues/2733
+// https://github.com/d3/d3-selection#event
+function getEvent() {
+    return require('d3-selection').event;
+}
+
 
 var defaultConfig = {
     me: 'Bob', // User's id
@@ -26,7 +33,8 @@ var defaultConfig = {
 
     // DOM ids
     ids: {
-        messages: '#messages'
+        messages: '#messages',
+        input: '#input_message'
     },
 
     // DOM classes
@@ -124,10 +132,9 @@ function getDayString(d) {
 function Messenger(config) {
     // Make own config s.t. the defaults remain intact for other instances
     this.config = Object.create(defaultConfig);
+    Object.assign(this.config, config);
 
     this.getDayString = getDayString.bind(this);
-
-    Object.assign(this.config, config);
 }
 
 
@@ -175,6 +182,8 @@ Messenger.prototype.update = function () {
     var days = this.updateDays(root, nested);
     var author = this.updateAuthors(days);
     this.updateMessages(author);
+
+    return this;
 };
 
 
@@ -311,6 +320,18 @@ Messenger.prototype.scrollDown = function () {
         // [selector].scrollIntoView();
         this.scrollTop = this.scrollHeight;
     });
+
+    return this;
+};
+
+
+Messenger.prototype.input = function (callback) {
+    d3.select(this.config.ids.input)
+        .attr('placeholder', this.l10n('placeholder'))
+        .text('')
+        .on('keydown', function () {
+            callback.call(this, getEvent());
+        });
 };
 
 

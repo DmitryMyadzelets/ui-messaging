@@ -5,23 +5,29 @@
 var messaging = require('./index.js');
 var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
+var tidy = require('./tidy-input');
 
 
 var authors = ['Alice', 'Bob', 'Lorem Ipsum'];
 var nMessages = 20; // Number of messages
 
 
-// Returns a message object with random data
-function createMessage() {
+function emptyMessage() {
     return {
         // id is used as a DOM element id
         // so it [can't start with a number](https://www.w3.org/TR/CSS21/syndata.html#value-def-identifier)
         // We add _ to make selectors work
-        id: '_' + shortId.generate(),
-        date: Date.now() - 1E8 * (Math.random() * 10 | 0),
-        body: lipsum(),
-        author: authors[authors.length * Math.random() | 0]
+        id: '_' + shortId.generate()
     };
+}
+
+// Returns a message object with random data
+function createMessage() {
+    var o = emptyMessage();
+    o.date = Date.now() - 1E8 * (Math.random() * 10 | 0);
+    o.body = lipsum();
+    o.author = authors[authors.length * Math.random() | 0];
+    return o;
 }
 
 
@@ -37,13 +43,36 @@ function init() {
         data: data
     });
 
-    chat.update();
-    chat.scrollDown();
+    chat.update()
+        .scrollDown();
+
+    chat.input(function (event) {
+        if ('Enter' === event.key && event.ctrlKey) {
+            var text = tidy(this.innerHTML);
+            this.innerHTML = '';
+
+            if (!text.length) {
+                return;
+            }
+
+            // Make the message object
+            var o = emptyMessage();
+            o.author = chat.config.me;
+            o.date = Date.now();
+            o.body = text;
+
+            data.messages.push(o);
+
+            chat.update()
+                .scrollDown();
+        }
+    });
 }
+
 
 document.addEventListener("DOMContentLoaded", init);
 
-},{"./index.js":2,"lorem-ipsum":5,"shortid":6}],2:[function(require,module,exports){
+},{"./index.js":2,"./tidy-input":15,"lorem-ipsum":5,"shortid":6}],2:[function(require,module,exports){
 /*jslint browser: false*/
 /*global d3*/
 'use strict';
@@ -51,6 +80,13 @@ document.addEventListener("DOMContentLoaded", init);
 // Get d3 selection module only
 // See (how to use d3 modules)[https://github.com/d3/d3/blob/master/README.md]
 var d3 = Object.assign({}, require('d3-selection'));
+
+// Hack to get the d3.event:
+// https://github.com/d3/d3/issues/2733
+// https://github.com/d3/d3-selection#event
+function getEvent() {
+    return require('d3-selection').event;
+}
 
 
 var defaultConfig = {
@@ -72,7 +108,8 @@ var defaultConfig = {
 
     // DOM ids
     ids: {
-        messages: '#messages'
+        messages: '#messages',
+        input: '#input_message'
     },
 
     // DOM classes
@@ -170,10 +207,9 @@ function getDayString(d) {
 function Messenger(config) {
     // Make own config s.t. the defaults remain intact for other instances
     this.config = Object.create(defaultConfig);
+    Object.assign(this.config, config);
 
     this.getDayString = getDayString.bind(this);
-
-    Object.assign(this.config, config);
 }
 
 
@@ -211,8 +247,8 @@ Messenger.prototype.update = function () {
     //      div.messages
     // 1        div.messages_day_group
     //              div.messages_day
-    // 2            div.messages_author_group .messages_are_mine
-    // 3                div.message .message_is_my .same_author .same_time
+    // 2            div.messages_author_group [.my_messages]
+    // 3                div.message [.my_message .same_author .same_time]
     //                      div.message_time
     //                      div.message_left_part
     //                          div.message_author
@@ -221,6 +257,8 @@ Messenger.prototype.update = function () {
     var days = this.updateDays(root, nested);
     var author = this.updateAuthors(days);
     this.updateMessages(author);
+
+    return this;
 };
 
 
@@ -274,6 +312,7 @@ Messenger.prototype.updateAuthors = function (parent) {
 
 
 Messenger.prototype.updateMessages = function (parent) {
+
     var config = this.config;
     var classes = config.classes;
 
@@ -356,6 +395,18 @@ Messenger.prototype.scrollDown = function () {
         // [selector].scrollIntoView();
         this.scrollTop = this.scrollHeight;
     });
+
+    return this;
+};
+
+
+Messenger.prototype.input = function (callback) {
+    d3.select(this.config.ids.input)
+        .attr('placeholder', this.l10n('placeholder'))
+        .text('')
+        .on('keydown', function () {
+            callback.call(this, getEvent());
+        });
 };
 
 
@@ -1534,7 +1585,7 @@ function simplePluralize(string) {
 
 module.exports = generator;
 
-},{"./dictionary":4,"os":15}],6:[function(require,module,exports){
+},{"./dictionary":4,"os":16}],6:[function(require,module,exports){
 'use strict';
 module.exports = require('./lib/index');
 
@@ -1850,6 +1901,18 @@ module.exports = {
 module.exports = 0;
 
 },{}],15:[function(require,module,exports){
+module.exports = function (html) {
+    'use strict';
+    return html
+        .replace(/(&nbsp;)+/gi, ' ') // Get back normal spaces
+        .replace(/\s+(<br>)/g, '\$1') // Remove spaces before <br>
+        .replace(/(<br>)\s+/g, '\$1') // Remove spaces after <br>
+        .replace(/\s{2,}/g, ' ') // Replace multiple spaces with one
+        .replace(/^(<br>)*/i, '') // Remove <br> at the beginning
+        .replace(/(<br>)*$/i, '') // ... and at the end
+        .replace(/(<br>){3,}/gi, '<br><br>'); // No more then two <br>
+};
+},{}],16:[function(require,module,exports){
 exports.endianness = function () { return 'LE' };
 
 exports.hostname = function () {
