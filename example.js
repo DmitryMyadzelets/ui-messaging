@@ -37,6 +37,25 @@ var data = {
 };
 
 
+var fakeReply = (function () {
+    var wait = false;
+    return function (callback) {
+        if (wait) {
+            return;
+        }
+        wait = true;
+        var o = createMessage();
+        // Typing speed: 200 chars per second
+        var t = 50 * o.body.length | 0;
+        setTimeout(function () {
+            o.date = Date.now();
+            callback(o);
+            wait = false;
+        }, t);
+    };
+}());
+
+
 function init() {
     var chat = messaging.chat({
         data: data
@@ -64,6 +83,12 @@ function init() {
 
             chat.update()
                 .scrollDown();
+
+            fakeReply(function (reply) {
+                data.messages.push(reply);
+                chat.update()
+                    .scrollDown();
+            });
         }
     });
 }
