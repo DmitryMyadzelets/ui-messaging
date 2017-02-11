@@ -5,6 +5,7 @@ var messaging = require('./index.js');
 var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
 var tidy = require('./tidy-input');
+var d3 = Object.assign({}, require('d3-selection'), require('d3-timer'));
 
 
 var authors = ['Alice', 'Bob', 'Lorem Ipsum'];
@@ -56,6 +57,39 @@ var fakeReply = (function () {
 }());
 
 
+// Sets scroll event
+function onscroll(element, callback) {
+    var locked, o = {};
+
+    function tick() {
+        callback(o);
+        locked = false;
+    }
+
+    function onevent(ev) {
+        if (!locked) {
+            if (undefined !== ev.target.scrollTop) { // DOM element
+                o.x = ev.target.scrollLeft;
+                o.y = ev.target.scrollTop;
+            } else { // window or document
+                o.x = ev.view.scrollX
+                        || ev.view.pageXOffset
+                        || document.documentElement.scrollLeft
+                        || document.body.scrollLeft;
+                o.y = ev.view.scrollY
+                        || ev.view.pageYOffset
+                        || document.documentElement.scrollTop
+                        || document.body.scrollTop;
+            }
+            d3.timeout(tick);
+        }
+        locked = true;
+    }
+
+    d3.select(element).node().addEventListener('scroll', onevent);
+}
+
+
 function init() {
     var chat = messaging.chat({
         data: data
@@ -89,6 +123,12 @@ function init() {
                 chat.update()
                     .scrollDown();
             });
+        }
+    });
+
+    onscroll(document, function (o) {
+        if (!o.y) {
+            console.log('Load older messages');
         }
     });
 }

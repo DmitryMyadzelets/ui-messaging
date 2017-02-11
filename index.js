@@ -307,14 +307,19 @@ function scrollable(element) {
 }
 
 
+// Returns scrollable element or undefined
+function findScrollable(element) {
+    // Find which container is scrollable
+    while (element && !scrollable(element)) {
+        element = element.parentNode;
+    }
+    return element;
+}
+
+
 // Scrolls down the messages
 Messenger.prototype.scrollDown = function () {
-    var e = d3.select(this.config.ids.messages).node();
-
-    // Find which container should be scrolled
-    while (e && !scrollable(e)) {
-        e = e.parentNode;
-    }
+    var e = findScrollable(d3.select(this.config.ids.messages).node());
 
     d3.select(e).each(function () {
         // [selector].scrollIntoView();
@@ -331,6 +336,9 @@ Messenger.prototype.input = function (callback) {
         .text('')
         .on('keydown', function () {
             callback.call(this, getEvent());
+        })
+        .on('scroll', function () {
+            console.log('scroll', this);
         });
 };
 

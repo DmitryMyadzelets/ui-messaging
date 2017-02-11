@@ -6,6 +6,7 @@ var messaging = require('./index.js');
 var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
 var tidy = require('./tidy-input');
+var d3 = Object.assign({}, require('d3-selection'), require('d3-timer'));
 
 
 var authors = ['Alice', 'Bob', 'Lorem Ipsum'];
@@ -57,6 +58,39 @@ var fakeReply = (function () {
 }());
 
 
+// Sets scroll event
+function onscroll(element, callback) {
+    var locked, o = {};
+
+    function tick() {
+        callback(o);
+        locked = false;
+    }
+
+    function onevent(ev) {
+        if (!locked) {
+            if (undefined !== ev.target.scrollTop) { // DOM element
+                o.x = ev.target.scrollLeft;
+                o.y = ev.target.scrollTop;
+            } else { // window or document
+                o.x = ev.view.scrollX
+                        || ev.view.pageXOffset
+                        || document.documentElement.scrollLeft
+                        || document.body.scrollLeft;
+                o.y = ev.view.scrollY
+                        || ev.view.pageYOffset
+                        || document.documentElement.scrollTop
+                        || document.body.scrollTop;
+            }
+            d3.timeout(tick);
+        }
+        locked = true;
+    }
+
+    d3.select(element).node().addEventListener('scroll', onevent);
+}
+
+
 function init() {
     var chat = messaging.chat({
         data: data
@@ -92,12 +126,18 @@ function init() {
             });
         }
     });
+
+    onscroll(document, function (o) {
+        if (!o.y) {
+            console.log('Load older messages');
+        }
+    });
 }
 
 
 document.addEventListener("DOMContentLoaded", init);
 
-},{"./index.js":2,"./tidy-input":15,"lorem-ipsum":5,"shortid":6}],2:[function(require,module,exports){
+},{"./index.js":2,"./tidy-input":16,"d3-selection":3,"d3-timer":4,"lorem-ipsum":6,"shortid":7}],2:[function(require,module,exports){
 /*jslint browser: false*/
 /*global d3*/
 'use strict';
@@ -407,14 +447,19 @@ function scrollable(element) {
 }
 
 
+// Returns scrollable element or undefined
+function findScrollable(element) {
+    // Find which container is scrollable
+    while (element && !scrollable(element)) {
+        element = element.parentNode;
+    }
+    return element;
+}
+
+
 // Scrolls down the messages
 Messenger.prototype.scrollDown = function () {
-    var e = d3.select(this.config.ids.messages).node();
-
-    // Find which container should be scrolled
-    while (e && !scrollable(e)) {
-        e = e.parentNode;
-    }
+    var e = findScrollable(d3.select(this.config.ids.messages).node());
 
     d3.select(e).each(function () {
         // [selector].scrollIntoView();
@@ -431,6 +476,9 @@ Messenger.prototype.input = function (callback) {
         .text('')
         .on('keydown', function () {
             callback.call(this, getEvent());
+        })
+        .on('scroll', function () {
+            console.log('scroll', this);
         });
 };
 
@@ -1418,6 +1466,157 @@ Object.defineProperty(exports, '__esModule', { value: true });
 })));
 
 },{}],4:[function(require,module,exports){
+// https://d3js.org/d3-timer/ Version 1.0.4. Copyright 2017 Mike Bostock.
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.d3 = global.d3 || {})));
+}(this, (function (exports) { 'use strict';
+
+var frame = 0;
+var timeout = 0;
+var interval = 0;
+var pokeDelay = 1000;
+var taskHead;
+var taskTail;
+var clockLast = 0;
+var clockNow = 0;
+var clockSkew = 0;
+var clock = typeof performance === "object" && performance.now ? performance : Date;
+var setFrame = typeof requestAnimationFrame === "function" ? requestAnimationFrame : function(f) { setTimeout(f, 17); };
+
+function now() {
+  return clockNow || (setFrame(clearNow), clockNow = clock.now() + clockSkew);
+}
+
+function clearNow() {
+  clockNow = 0;
+}
+
+function Timer() {
+  this._call =
+  this._time =
+  this._next = null;
+}
+
+Timer.prototype = timer.prototype = {
+  constructor: Timer,
+  restart: function(callback, delay, time) {
+    if (typeof callback !== "function") throw new TypeError("callback is not a function");
+    time = (time == null ? now() : +time) + (delay == null ? 0 : +delay);
+    if (!this._next && taskTail !== this) {
+      if (taskTail) taskTail._next = this;
+      else taskHead = this;
+      taskTail = this;
+    }
+    this._call = callback;
+    this._time = time;
+    sleep();
+  },
+  stop: function() {
+    if (this._call) {
+      this._call = null;
+      this._time = Infinity;
+      sleep();
+    }
+  }
+};
+
+function timer(callback, delay, time) {
+  var t = new Timer;
+  t.restart(callback, delay, time);
+  return t;
+}
+
+function timerFlush() {
+  now(); // Get the current time, if not already set.
+  ++frame; // Pretend we’ve set an alarm, if we haven’t already.
+  var t = taskHead, e;
+  while (t) {
+    if ((e = clockNow - t._time) >= 0) t._call.call(null, e);
+    t = t._next;
+  }
+  --frame;
+}
+
+function wake() {
+  clockNow = (clockLast = clock.now()) + clockSkew;
+  frame = timeout = 0;
+  try {
+    timerFlush();
+  } finally {
+    frame = 0;
+    nap();
+    clockNow = 0;
+  }
+}
+
+function poke() {
+  var now = clock.now(), delay = now - clockLast;
+  if (delay > pokeDelay) clockSkew -= delay, clockLast = now;
+}
+
+function nap() {
+  var t0, t1 = taskHead, t2, time = Infinity;
+  while (t1) {
+    if (t1._call) {
+      if (time > t1._time) time = t1._time;
+      t0 = t1, t1 = t1._next;
+    } else {
+      t2 = t1._next, t1._next = null;
+      t1 = t0 ? t0._next = t2 : taskHead = t2;
+    }
+  }
+  taskTail = t0;
+  sleep(time);
+}
+
+function sleep(time) {
+  if (frame) return; // Soonest alarm already set, or will be.
+  if (timeout) timeout = clearTimeout(timeout);
+  var delay = time - clockNow;
+  if (delay > 24) {
+    if (time < Infinity) timeout = setTimeout(wake, delay);
+    if (interval) interval = clearInterval(interval);
+  } else {
+    if (!interval) clockLast = clockNow, interval = setInterval(poke, pokeDelay);
+    frame = 1, setFrame(wake);
+  }
+}
+
+var timeout$1 = function(callback, delay, time) {
+  var t = new Timer;
+  delay = delay == null ? 0 : +delay;
+  t.restart(function(elapsed) {
+    t.stop();
+    callback(elapsed + delay);
+  }, delay, time);
+  return t;
+};
+
+var interval$1 = function(callback, delay, time) {
+  var t = new Timer, total = delay;
+  if (delay == null) return t.restart(callback, delay, time), t;
+  delay = +delay, time = time == null ? now() : +time;
+  t.restart(function tick(elapsed) {
+    elapsed += total;
+    t.restart(tick, total += delay, time);
+    callback(elapsed);
+  }, delay, time);
+  return t;
+};
+
+exports.now = now;
+exports.timer = timer;
+exports.timerFlush = timerFlush;
+exports.timeout = timeout$1;
+exports.interval = interval$1;
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+
+},{}],5:[function(require,module,exports){
 var dictionary = {
   words: [
     'ad',
@@ -1486,7 +1685,7 @@ var dictionary = {
 };
 
 module.exports = dictionary;
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var generator = function() {
   var options = (arguments.length) ? arguments[0] : {}
     , count = options.count || 1
@@ -1610,11 +1809,11 @@ function simplePluralize(string) {
 
 module.exports = generator;
 
-},{"./dictionary":4,"os":16}],6:[function(require,module,exports){
+},{"./dictionary":5,"os":17}],7:[function(require,module,exports){
 'use strict';
 module.exports = require('./lib/index');
 
-},{"./lib/index":10}],7:[function(require,module,exports){
+},{"./lib/index":11}],8:[function(require,module,exports){
 'use strict';
 
 var randomFromSeed = require('./random/random-from-seed');
@@ -1714,7 +1913,7 @@ module.exports = {
     shuffled: getShuffled
 };
 
-},{"./random/random-from-seed":13}],8:[function(require,module,exports){
+},{"./random/random-from-seed":14}],9:[function(require,module,exports){
 'use strict';
 var alphabet = require('./alphabet');
 
@@ -1733,7 +1932,7 @@ function decode(id) {
 
 module.exports = decode;
 
-},{"./alphabet":7}],9:[function(require,module,exports){
+},{"./alphabet":8}],10:[function(require,module,exports){
 'use strict';
 
 var randomByte = require('./random/random-byte');
@@ -1754,7 +1953,7 @@ function encode(lookup, number) {
 
 module.exports = encode;
 
-},{"./random/random-byte":12}],10:[function(require,module,exports){
+},{"./random/random-byte":13}],11:[function(require,module,exports){
 'use strict';
 
 var alphabet = require('./alphabet');
@@ -1856,7 +2055,7 @@ module.exports.characters = characters;
 module.exports.decode = decode;
 module.exports.isValid = isValid;
 
-},{"./alphabet":7,"./decode":8,"./encode":9,"./is-valid":11,"./util/cluster-worker-id":14}],11:[function(require,module,exports){
+},{"./alphabet":8,"./decode":9,"./encode":10,"./is-valid":12,"./util/cluster-worker-id":15}],12:[function(require,module,exports){
 'use strict';
 var alphabet = require('./alphabet');
 
@@ -1877,7 +2076,7 @@ function isShortId(id) {
 
 module.exports = isShortId;
 
-},{"./alphabet":7}],12:[function(require,module,exports){
+},{"./alphabet":8}],13:[function(require,module,exports){
 'use strict';
 
 var crypto = typeof window === 'object' && (window.crypto || window.msCrypto); // IE 11 uses window.msCrypto
@@ -1893,7 +2092,7 @@ function randomByte() {
 
 module.exports = randomByte;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 // Found this seed-based random generator somewhere
@@ -1920,12 +2119,12 @@ module.exports = {
     seed: setSeed
 };
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 module.exports = 0;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = function (html) {
     'use strict';
     return html
@@ -1937,7 +2136,7 @@ module.exports = function (html) {
         .replace(/(<br>)*$/i, '') // ... and at the end
         .replace(/(<br>){3,}/gi, '<br><br>'); // No more then two <br>
 };
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 exports.endianness = function () { return 'LE' };
 
 exports.hostname = function () {
