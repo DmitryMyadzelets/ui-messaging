@@ -22,19 +22,27 @@ function emptyMessage() {
 }
 
 // Returns a message object with random data
-function createMessage() {
+function createMessage(date) {
+    date = date || Date.now();
     var o = emptyMessage();
-    o.date = Date.now() - 1E8 * (Math.random() * 10 | 0);
+    o.date = date - 1E8 * (Math.random() * 10 | 0);
     o.body = lipsum();
     o.author = authors[authors.length * Math.random() | 0];
     return o;
 }
 
 
+function loadMessages(date) {
+    return Array.apply(null, Array(nMessages)).map(function () {
+        return createMessage(date);
+    });
+}
+
+
 // Create a few chat messages
 
 var data = {
-    messages: Array.apply(null, Array(nMessages)).map(createMessage)
+    messages: loadMessages()
 };
 
 
@@ -128,7 +136,10 @@ function init() {
 
     onscroll(document, function (o) {
         if (!o.y) {
-            console.log('Load older messages');
+            var mess = chat.config.data.messages[0];
+            var date = (mess && mess.date) || Date.now();
+            data.messages = data.messages.concat(loadMessages(date));
+            chat.update();
         }
     });
 }
