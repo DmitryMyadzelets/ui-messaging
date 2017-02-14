@@ -1697,9 +1697,11 @@ function createMessage(date) {
 
 
 function loadMessages(date) {
-    return Array.apply(null, Array(nMessages)).map(function () {
-        return createMessage(date);
-    });
+    var array = [], i;
+    for (i = 0; i < nMessages; i += 1) {
+        array.push(createMessage(date));
+    }
+    return array;
 }
 
 
@@ -1738,7 +1740,7 @@ function onscroll(element, callback) {
         locked = false;
     }
 
-    function onevent() {
+    d3.select(element).on('scroll', function () {
         var ev = d3.event;
         if (!locked) {
             if (undefined !== ev.target.scrollTop) { // DOM element
@@ -1757,9 +1759,7 @@ function onscroll(element, callback) {
             d3.timeout(tick);
         }
         locked = true;
-    }
-
-    d3.select(element).on('scroll', onevent);
+    });
 }
 
 
