@@ -1,17 +1,17 @@
 /*jslint browser: false*/
-/*global d3*/
 'use strict';
 
 // Get d3 selection module only
 // See (how to use d3 modules)[https://github.com/d3/d3/blob/master/README.md]
-var d3 = Object.assign({}, require('d3-selection'));
+// Note, that when you use Object.assign({}, require('d3-selection')) the d3.event object is null
+var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
 
 // Hack to get the d3.event:
 // https://github.com/d3/d3/issues/2733
 // https://github.com/d3/d3-selection#event
-function getEvent() {
-    return require('d3-selection').event;
-}
+// function getEvent() {
+//     return require('d3-selection').event;
+// }
 
 
 var defaultConfig = {
@@ -335,10 +335,7 @@ Messenger.prototype.input = function (callback) {
         .attr('placeholder', this.l10n('placeholder'))
         .text('')
         .on('keydown', function () {
-            callback.call(this, getEvent());
-        })
-        .on('scroll', function () {
-            console.log('scroll', this);
+            callback.call(this, d3.event);
         });
 };
 

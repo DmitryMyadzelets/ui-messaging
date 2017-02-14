@@ -5,7 +5,7 @@ var messaging = require('./index.js');
 var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
 var tidy = require('./tidy-input');
-var d3 = Object.assign({}, require('d3-selection'), require('d3-timer'));
+var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
 
 
 var authors = ['Alice', 'Bob', 'Lorem Ipsum'];
@@ -74,7 +74,8 @@ function onscroll(element, callback) {
         locked = false;
     }
 
-    function onevent(ev) {
+    function onevent() {
+        var ev = d3.event;
         if (!locked) {
             if (undefined !== ev.target.scrollTop) { // DOM element
                 o.x = ev.target.scrollLeft;
@@ -94,7 +95,7 @@ function onscroll(element, callback) {
         locked = true;
     }
 
-    d3.select(element).node().addEventListener('scroll', onevent);
+    d3.select(element).on('scroll', onevent);
 }
 
 

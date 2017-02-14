@@ -6,7 +6,7 @@ var messaging = require('./index.js');
 var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
 var tidy = require('./tidy-input');
-var d3 = Object.assign({}, require('d3-selection'), require('d3-timer'));
+var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
 
 
 var authors = ['Alice', 'Bob', 'Lorem Ipsum'];
@@ -43,7 +43,7 @@ function loadMessages(date) {
 // Create a few chat messages
 
 var data = {
-    messages: Array.apply(null, Array(nMessages)).map(createMessage)
+    messages: loadMessages()
 };
 
 
@@ -75,7 +75,8 @@ function onscroll(element, callback) {
         locked = false;
     }
 
-    function onevent(ev) {
+    function onevent() {
+        var ev = d3.event;
         if (!locked) {
             if (undefined !== ev.target.scrollTop) { // DOM element
                 o.x = ev.target.scrollLeft;
@@ -95,7 +96,7 @@ function onscroll(element, callback) {
         locked = true;
     }
 
-    d3.select(element).node().addEventListener('scroll', onevent);
+    d3.select(element).on('scroll', onevent);
 }
 
 
@@ -150,19 +151,19 @@ document.addEventListener("DOMContentLoaded", init);
 
 },{"./index.js":2,"./tidy-input":16,"d3-selection":3,"d3-timer":4,"lorem-ipsum":6,"shortid":7}],2:[function(require,module,exports){
 /*jslint browser: false*/
-/*global d3*/
 'use strict';
 
 // Get d3 selection module only
 // See (how to use d3 modules)[https://github.com/d3/d3/blob/master/README.md]
-var d3 = Object.assign({}, require('d3-selection'));
+// Note, that when you use Object.assign({}, require('d3-selection')) the d3.event object is null
+var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
 
 // Hack to get the d3.event:
 // https://github.com/d3/d3/issues/2733
 // https://github.com/d3/d3-selection#event
-function getEvent() {
-    return require('d3-selection').event;
-}
+// function getEvent() {
+//     return require('d3-selection').event;
+// }
 
 
 var defaultConfig = {
@@ -486,10 +487,7 @@ Messenger.prototype.input = function (callback) {
         .attr('placeholder', this.l10n('placeholder'))
         .text('')
         .on('keydown', function () {
-            callback.call(this, getEvent());
-        })
-        .on('scroll', function () {
-            console.log('scroll', this);
+            callback.call(this, d3.event);
         });
 };
 
@@ -501,7 +499,7 @@ function chat(config) {
 
 exports.chat = chat;
 
-},{"d3-selection":3}],3:[function(require,module,exports){
+},{"d3-selection":3,"d3-timer":4}],3:[function(require,module,exports){
 // https://d3js.org/d3-selection/ Version 1.0.3. Copyright 2016 Mike Bostock.
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
