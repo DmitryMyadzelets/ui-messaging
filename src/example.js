@@ -81,7 +81,7 @@ function onscroll(element, callback) {
     d3.select(element).on('scroll', function () {
         // var ev = d3.event;
         if (!locked) {
-            o = underscroll.size(element);
+            o = underscroll.position(element);
             d3.timeout(tick);
         }
         locked = true;
@@ -127,7 +127,7 @@ function init() {
         });
     });
 
-    var size = underscroll.of(document);
+    var position = underscroll.of(document);
 
     onscroll(document, function (o) {
         if (o.y === 0) {
@@ -143,7 +143,7 @@ function init() {
             data.messages = data.messages.concat(loadMessages(date));
             chat.update();
 
-            var top = size().h - o.h;
+            var top = position().h - o.h;
             if (top > 0) {
                 document.documentElement.scrollTop = top;
             }

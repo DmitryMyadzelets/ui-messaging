@@ -59,11 +59,11 @@ function of(element) {
 }
 
 
-function size(element) {
+function position(element) {
     return of(element)();
 }
 
 
-// Returns object with element size under scrolling box
+// Returns object with element position under scrolling box
 exports.of = of;
-exports.size = size;
+exports.position = position;
