@@ -7,7 +7,8 @@
 // https://github.com/d3/d3/issues/2733
 // https://github.com/d3/d3-selection#event
 var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
-var defaultConfig = require('./config.json');
+var defaults = require('./config.json');
+var l10n = require('./l10n');
 
 // Helpers
 
@@ -73,7 +74,7 @@ function getDayString(d) {
         day: 'numeric'
     });
     if (d === today) {
-        return this.l10n('today');
+        return this.local('today');
     }
     return day;
 }
@@ -81,20 +82,15 @@ function getDayString(d) {
 
 function Messenger(config) {
     // Make own config s.t. the defaults remain intact for other instances
-    this.config = Object.create(defaultConfig);
+    this.config = Object.create(defaults);
     Object.assign(this.config, config);
 
     this.getDayString = getDayString.bind(this);
+    this.local = l10n.locale(this.config.locale);
 }
 
 
 // Helpers
-
-// Returns localized string from config
-Messenger.prototype.l10n = function (key) {
-    return this.config.l10n[key][this.config.locale] || this.config.l10n[key][undefined];
-};
-
 
 
 function sortComparator(a, b) {
@@ -278,17 +274,6 @@ Messenger.prototype.scrollDown = function () {
 
     return this;
 };
-
-
-Messenger.prototype.input = function (callback) {
-    d3.select(this.config.ids.input)
-        .attr('placeholder', this.l10n('placeholder'))
-        .text('')
-        .on('keydown', function () {
-            callback.call(this, d3.event);
-        });
-};
-
 
 function chat(config) {
     return new Messenger(config);

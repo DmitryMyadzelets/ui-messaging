@@ -1317,7 +1317,7 @@ function simplePluralize(string) {
 
 module.exports = generator;
 
-},{"./dictionary":3,"os":18}],5:[function(require,module,exports){
+},{"./dictionary":3,"os":21}],5:[function(require,module,exports){
 'use strict';
 module.exports = require('./lib/index');
 
@@ -1635,18 +1635,6 @@ module.exports = 0;
 },{}],14:[function(require,module,exports){
 module.exports={
     "me":"Bob",
-    "l10n":{
-        "today":{
-            "undefined":"Today",
-            "it":"Oggi",
-            "ru":"Сегодня"
-        },
-        "placeholder":{
-            "undefined":"Enter your message here...",
-            "it":"Scriva il suo messagio qui...",
-            "ru":"Напишите сообщение..."
-        }
-    },
     "ids":{
         "messages":"#messages",
         "input":"#input_message"
@@ -1671,13 +1659,15 @@ module.exports={
         ]
     }
 }
+
 },{}],15:[function(require,module,exports){
 /*jslint browser: false*/
 'use strict';
 
-var messaging = require('./index.js');
+var messaging = require('./messages.js');
 var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
+var input = require('./input').input;
 var tidy = require('./tidy-input');
 var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
 
@@ -1781,7 +1771,7 @@ function init() {
     chat.update()
         .scrollDown();
 
-    chat.input(function (event) {
+    chat.input = input(null, function (event) {
         if ('Enter' !== event.key) {
             return;
         }
@@ -1824,7 +1814,64 @@ function init() {
 
 document.addEventListener("DOMContentLoaded", init);
 
-},{"./index.js":16,"./tidy-input":17,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],16:[function(require,module,exports){
+},{"./input":16,"./messages.js":19,"./tidy-input":20,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],16:[function(require,module,exports){
+/*jslint browser: false*/
+'use strict';
+
+var d3 = Object.assign(require('d3-selection'));
+var defaults = require('./config.json');
+var l10n = require('./l10n');
+
+
+function Input(config, callback) {
+    this.config = Object.create(defaults);
+    Object.assign(this.config, config);
+
+    this.local = l10n.locale(this.config.locale);
+
+    d3.select(this.config.ids.input)
+        .attr('placeholder', this.local('placeholder'))
+        .text('')
+        .on('keydown', function () {
+            callback.call(this, d3.event);
+        });
+}
+
+function constructor(config, callback) {
+    return new Input(config, callback);
+}
+
+exports.input = constructor;
+},{"./config.json":14,"./l10n":18,"d3-selection":1}],17:[function(require,module,exports){
+module.exports={
+    "today":{
+        "undefined":"Today",
+        "it":"Oggi",
+        "ru":"Сегодня"
+    },
+    "placeholder":{
+        "undefined":"Enter your message here...",
+        "it":"Scriva il suo messagio qui...",
+        "ru":"Напишите сообщение..."
+    }
+}
+},{}],18:[function(require,module,exports){
+/*jslint browser: false*/
+'use strict';
+
+var config = require('./l10n.json');
+
+function l10n(key) {
+    var locale = this;
+    return config[key][locale] || config.l10n[key][undefined];
+}
+
+function constructor(locale) {
+    return l10n.bind(locale);
+}
+
+exports.locale = constructor;
+},{"./l10n.json":17}],19:[function(require,module,exports){
 /*jslint browser: false*/
 'use strict';
 
@@ -1834,7 +1881,8 @@ document.addEventListener("DOMContentLoaded", init);
 // https://github.com/d3/d3/issues/2733
 // https://github.com/d3/d3-selection#event
 var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
-var defaultConfig = require('./config.json');
+var defaults = require('./config.json');
+var l10n = require('./l10n');
 
 // Helpers
 
@@ -1900,7 +1948,7 @@ function getDayString(d) {
         day: 'numeric'
     });
     if (d === today) {
-        return this.l10n('today');
+        return this.local('today');
     }
     return day;
 }
@@ -1908,20 +1956,15 @@ function getDayString(d) {
 
 function Messenger(config) {
     // Make own config s.t. the defaults remain intact for other instances
-    this.config = Object.create(defaultConfig);
+    this.config = Object.create(defaults);
     Object.assign(this.config, config);
 
     this.getDayString = getDayString.bind(this);
+    this.local = l10n.locale(this.config.locale);
 }
 
 
 // Helpers
-
-// Returns localized string from config
-Messenger.prototype.l10n = function (key) {
-    return this.config.l10n[key][this.config.locale] || this.config.l10n[key][undefined];
-};
-
 
 
 function sortComparator(a, b) {
@@ -2106,17 +2149,6 @@ Messenger.prototype.scrollDown = function () {
     return this;
 };
 
-
-Messenger.prototype.input = function (callback) {
-    d3.select(this.config.ids.input)
-        .attr('placeholder', this.l10n('placeholder'))
-        .text('')
-        .on('keydown', function () {
-            callback.call(this, d3.event);
-        });
-};
-
-
 function chat(config) {
     return new Messenger(config);
 }
@@ -2124,7 +2156,7 @@ function chat(config) {
 
 exports.chat = chat;
 
-},{"./config.json":14,"d3-selection":1,"d3-timer":2}],17:[function(require,module,exports){
+},{"./config.json":14,"./l10n":18,"d3-selection":1,"d3-timer":2}],20:[function(require,module,exports){
 module.exports = function (html) {
     'use strict';
     return html
@@ -2136,7 +2168,7 @@ module.exports = function (html) {
         .replace(/(<br>)*$/i, '') // ... and at the end
         .replace(/(<br>){3,}/gi, '<br><br>'); // No more then two <br>
 };
-},{}],18:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 exports.endianness = function () { return 'LE' };
 
 exports.hostname = function () {

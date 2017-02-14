@@ -1,9 +1,10 @@
 /*jslint browser: false*/
 'use strict';
 
-var messaging = require('./index.js');
+var messaging = require('./messages.js');
 var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
+var input = require('./input').input;
 var tidy = require('./tidy-input');
 var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
 
@@ -107,7 +108,7 @@ function init() {
     chat.update()
         .scrollDown();
 
-    chat.input(function (event) {
+    chat.input = input(null, function (event) {
         if ('Enter' !== event.key) {
             return;
         }

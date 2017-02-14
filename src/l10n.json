@@ -1,0 +1,12 @@
+{
+    "today":{
+        "undefined":"Today",
+        "it":"Oggi",
+        "ru":"Сегодня"
+    },
+    "placeholder":{
+        "undefined":"Enter your message here...",
+        "it":"Scriva il suo messagio qui...",
+        "ru":"Напишите сообщение..."
+    }
+}
