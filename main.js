@@ -1317,7 +1317,7 @@ function simplePluralize(string) {
 
 module.exports = generator;
 
-},{"./dictionary":3,"os":21}],5:[function(require,module,exports){
+},{"./dictionary":3,"os":22}],5:[function(require,module,exports){
 'use strict';
 module.exports = require('./lib/index');
 
@@ -1669,6 +1669,7 @@ var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
 var input = require('./input').input;
 var tidy = require('./tidy-input');
+var underscroll = require('./underscroll');
 var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
 
 
@@ -1733,7 +1734,7 @@ var fakeReply = (function () {
 
 // Sets scroll event
 function onscroll(element, callback) {
-    var locked, o = {};
+    var locked, o;
 
     function tick() {
         callback(o);
@@ -1741,21 +1742,9 @@ function onscroll(element, callback) {
     }
 
     d3.select(element).on('scroll', function () {
-        var ev = d3.event;
+        // var ev = d3.event;
         if (!locked) {
-            if (undefined !== ev.target.scrollTop) { // DOM element
-                o.x = ev.target.scrollLeft;
-                o.y = ev.target.scrollTop;
-            } else { // window or document
-                o.x = ev.view.scrollX
-                        || ev.view.pageXOffset
-                        || document.documentElement.scrollLeft
-                        || document.body.scrollLeft;
-                o.y = ev.view.scrollY
-                        || ev.view.pageYOffset
-                        || document.documentElement.scrollTop
-                        || document.body.scrollTop;
-            }
+            o = underscroll.size(element);
             d3.timeout(tick);
         }
         locked = true;
@@ -1801,12 +1790,26 @@ function init() {
         });
     });
 
+    var size = underscroll.of(document);
+
     onscroll(document, function (o) {
-        if (!o.y) {
+        if (o.y === 0) {
+
             var mess = chat.config.data.messages[0];
             var date = (mess && mess.date) || Date.now();
+
+            // Calculate previous day, in milliseconds
+            var d = new Date(date);
+            d.setDate(d.getDate() - 1);
+            date = d.getTime();
+
             data.messages = data.messages.concat(loadMessages(date));
             chat.update();
+
+            var top = size().h - o.h;
+            if (top > 0) {
+                document.documentElement.scrollTop = top;
+            }
         }
     });
 }
@@ -1814,7 +1817,7 @@ function init() {
 
 document.addEventListener("DOMContentLoaded", init);
 
-},{"./input":16,"./messages.js":19,"./tidy-input":20,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],16:[function(require,module,exports){
+},{"./input":16,"./messages.js":19,"./tidy-input":20,"./underscroll":21,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],16:[function(require,module,exports){
 /*jslint browser: false*/
 'use strict';
 
@@ -2169,6 +2172,76 @@ module.exports = function (html) {
         .replace(/(<br>){3,}/gi, '<br><br>'); // No more then two <br>
 };
 },{}],21:[function(require,module,exports){
+/*jslint browser: false*/
+/*global window, HTMLDocument*/
+'use strict';
+
+// Element
+function e(e) {
+    return {
+        x: e.scrollLeft,
+        y: e.scrollTop,
+        h: e.scrollHeight,
+        w: e.scrollWidth
+    };
+}
+
+// Window
+function w() {
+    return {
+        x: window.pageXOffset,
+        y: window.pageYOffset,
+        h: document.documentElement.scrollHeight,
+        w: document.documentElement.scrollWidth
+    };
+}
+
+// Document, modern
+function d() {
+    return {
+        x: document.documentElement.scrollLeft,
+        y: document.documentElement.scrollTop,
+        h: document.documentElement.scrollHeight,
+        w: document.documentElement.scrollWidth
+    };
+}
+
+// Document, obsolete
+function b() {
+    return {
+        x: document.body.scrollLeft,
+        y: document.body.scrollTop,
+        h: document.body.scrollHeight,
+        w: document.body.scrollWidth
+    };
+}
+
+
+function of(element) {
+    // if (window || document)
+    if (element.document || element instanceof HTMLDocument) {
+        // https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollY
+        if (window.pageXOffset !== undefined) {
+            return w;
+        }
+        if ((document.compatMode || "") === "CSS1Compat") {
+            return d;
+        }
+        return b;
+    }
+    return e;
+}
+
+
+function size(element) {
+    return of(element)();
+}
+
+
+// Returns object with element size under scrolling box
+exports.of = of;
+exports.size = size;
+},{}],22:[function(require,module,exports){
 exports.endianness = function () { return 'LE' };
 
 exports.hostname = function () {

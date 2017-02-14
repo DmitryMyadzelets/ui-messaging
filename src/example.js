@@ -6,6 +6,7 @@ var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
 var input = require('./input').input;
 var tidy = require('./tidy-input');
+var underscroll = require('./underscroll');
 var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
 
 
@@ -70,7 +71,7 @@ var fakeReply = (function () {
 
 // Sets scroll event
 function onscroll(element, callback) {
-    var locked, o = {};
+    var locked, o;
 
     function tick() {
         callback(o);
@@ -78,21 +79,9 @@ function onscroll(element, callback) {
     }
 
     d3.select(element).on('scroll', function () {
-        var ev = d3.event;
+        // var ev = d3.event;
         if (!locked) {
-            if (undefined !== ev.target.scrollTop) { // DOM element
-                o.x = ev.target.scrollLeft;
-                o.y = ev.target.scrollTop;
-            } else { // window or document
-                o.x = ev.view.scrollX
-                        || ev.view.pageXOffset
-                        || document.documentElement.scrollLeft
-                        || document.body.scrollLeft;
-                o.y = ev.view.scrollY
-                        || ev.view.pageYOffset
-                        || document.documentElement.scrollTop
-                        || document.body.scrollTop;
-            }
+            o = underscroll.size(element);
             d3.timeout(tick);
         }
         locked = true;
@@ -138,12 +127,26 @@ function init() {
         });
     });
 
+    var size = underscroll.of(document);
+
     onscroll(document, function (o) {
-        if (!o.y) {
+        if (o.y === 0) {
+
             var mess = chat.config.data.messages[0];
             var date = (mess && mess.date) || Date.now();
+
+            // Calculate previous day, in milliseconds
+            var d = new Date(date);
+            d.setDate(d.getDate() - 1);
+            date = d.getTime();
+
             data.messages = data.messages.concat(loadMessages(date));
             chat.update();
+
+            var top = size().h - o.h;
+            if (top > 0) {
+                document.documentElement.scrollTop = top;
+            }
         }
     });
 }
