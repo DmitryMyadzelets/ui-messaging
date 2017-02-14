@@ -43,7 +43,8 @@ function b() {
 }
 
 
-function of(element) {
+// Returns function for calculating element position
+function method(element) {
     // if (window || document)
     if (element.document || element instanceof HTMLDocument) {
         // https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollY
@@ -59,11 +60,11 @@ function of(element) {
 }
 
 
-function position(element) {
+// Return position of the element
+function of(element) {
     return of(element)();
 }
 
 
-// Returns object with element position under scrolling box
+exports.method = method;
 exports.of = of;
-exports.position = position;

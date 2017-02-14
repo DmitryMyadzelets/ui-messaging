@@ -81,7 +81,7 @@ function onscroll(element, callback) {
     d3.select(element).on('scroll', function () {
         // var ev = d3.event;
         if (!locked) {
-            o = underscroll.position(element);
+            o = underscroll.of(element);
             d3.timeout(tick);
         }
         locked = true;
@@ -127,7 +127,7 @@ function init() {
         });
     });
 
-    var position = underscroll.of(document);
+    var position = underscroll.method(document);
 
     onscroll(document, function (o) {
         if (o.y === 0) {
