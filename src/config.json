@@ -1,0 +1,38 @@
+{
+    "me":"Bob",
+    "l10n":{
+        "today":{
+            "undefined":"Today",
+            "it":"Oggi",
+            "ru":"Сегодня"
+        },
+        "placeholder":{
+            "undefined":"Enter your message here...",
+            "it":"Scriva il suo messagio qui...",
+            "ru":"Напишите сообщение..."
+        }
+    },
+    "ids":{
+        "messages":"#messages",
+        "input":"#input_message"
+    },
+    "classes":{
+        "day_group":"messages_day_group",
+        "day_header":"messages_day",
+        "author_group":"messages_author_group",
+        "my_messages":"my_messages",
+        "message":"message",
+        "my_message":"my_message",
+        "same_author":"same_author",
+        "same_time":"same_time",
+        "message_time":"message_time",
+        "message_block":"message_left_part",
+        "message_author":"message_author",
+        "message_body":"message_body"
+    },
+    "data":{
+        "messages":[
+
+        ]
+    }
+}

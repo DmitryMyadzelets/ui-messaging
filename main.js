@@ -1317,7 +1317,7 @@ function simplePluralize(string) {
 
 module.exports = generator;
 
-},{"./dictionary":3,"os":17}],5:[function(require,module,exports){
+},{"./dictionary":3,"os":18}],5:[function(require,module,exports){
 'use strict';
 module.exports = require('./lib/index');
 
@@ -1633,6 +1633,45 @@ module.exports = {
 module.exports = 0;
 
 },{}],14:[function(require,module,exports){
+module.exports={
+    "me":"Bob",
+    "l10n":{
+        "today":{
+            "undefined":"Today",
+            "it":"Oggi",
+            "ru":"Сегодня"
+        },
+        "placeholder":{
+            "undefined":"Enter your message here...",
+            "it":"Scriva il suo messagio qui...",
+            "ru":"Напишите сообщение..."
+        }
+    },
+    "ids":{
+        "messages":"#messages",
+        "input":"#input_message"
+    },
+    "classes":{
+        "day_group":"messages_day_group",
+        "day_header":"messages_day",
+        "author_group":"messages_author_group",
+        "my_messages":"my_messages",
+        "message":"message",
+        "my_message":"my_message",
+        "same_author":"same_author",
+        "same_time":"same_time",
+        "message_time":"message_time",
+        "message_block":"message_left_part",
+        "message_author":"message_author",
+        "message_body":"message_body"
+    },
+    "data":{
+        "messages":[
+
+        ]
+    }
+}
+},{}],15:[function(require,module,exports){
 /*jslint browser: false*/
 'use strict';
 
@@ -1785,67 +1824,17 @@ function init() {
 
 document.addEventListener("DOMContentLoaded", init);
 
-},{"./index.js":15,"./tidy-input":16,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],15:[function(require,module,exports){
+},{"./index.js":16,"./tidy-input":17,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],16:[function(require,module,exports){
 /*jslint browser: false*/
 'use strict';
 
 // Get d3 selection module only
 // See (how to use d3 modules)[https://github.com/d3/d3/blob/master/README.md]
 // Note, that when you use Object.assign({}, require('d3-selection')) the d3.event object is null
-var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
-
-// Hack to get the d3.event:
 // https://github.com/d3/d3/issues/2733
 // https://github.com/d3/d3-selection#event
-// function getEvent() {
-//     return require('d3-selection').event;
-// }
-
-
-var defaultConfig = {
-    me: 'Bob', // User's id
-
-    // Localization
-    l10n: {
-        today: {
-            undefined: 'Today',
-            it: 'Oggi',
-            ru: 'Сегодня'
-        },
-        placeholder: {
-            undefined: 'Enter your message here...',
-            it: 'Scriva il suo messagio qui...',
-            ru: 'Напишите сообщение...'
-        }
-    },
-
-    // DOM ids
-    ids: {
-        messages: '#messages',
-        input: '#input_message'
-    },
-
-    // DOM classes
-    classes: {
-        day_group: 'messages_day_group',
-        day_header: 'messages_day',
-        author_group: 'messages_author_group',
-        my_messages: 'my_messages',
-        message: 'message',
-        my_message: 'my_message',
-        same_author: 'same_author',
-        same_time: 'same_time',
-        message_time: 'message_time',
-        message_block: 'message_left_part',
-        message_author: 'message_author',
-        message_body: 'message_body'
-    },
-
-    // Data used for updating and rendering messages
-    data: {
-        messages: []
-    }
-};
+var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
+var defaultConfig = require('./config.json');
 
 // Helpers
 
@@ -2135,7 +2124,7 @@ function chat(config) {
 
 exports.chat = chat;
 
-},{"d3-selection":1,"d3-timer":2}],16:[function(require,module,exports){
+},{"./config.json":14,"d3-selection":1,"d3-timer":2}],17:[function(require,module,exports){
 module.exports = function (html) {
     'use strict';
     return html
@@ -2147,7 +2136,7 @@ module.exports = function (html) {
         .replace(/(<br>)*$/i, '') // ... and at the end
         .replace(/(<br>){3,}/gi, '<br><br>'); // No more then two <br>
 };
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 exports.endianness = function () { return 'LE' };
 
 exports.hostname = function () {
@@ -2194,4 +2183,4 @@ exports.tmpdir = exports.tmpDir = function () {
 
 exports.EOL = '\n';
 
-},{}]},{},[14]);
+},{}]},{},[15]);

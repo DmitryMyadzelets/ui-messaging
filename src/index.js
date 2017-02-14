@@ -4,60 +4,10 @@
 // Get d3 selection module only
 // See (how to use d3 modules)[https://github.com/d3/d3/blob/master/README.md]
 // Note, that when you use Object.assign({}, require('d3-selection')) the d3.event object is null
-var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
-
-// Hack to get the d3.event:
 // https://github.com/d3/d3/issues/2733
 // https://github.com/d3/d3-selection#event
-// function getEvent() {
-//     return require('d3-selection').event;
-// }
-
-
-var defaultConfig = {
-    me: 'Bob', // User's id
-
-    // Localization
-    l10n: {
-        today: {
-            undefined: 'Today',
-            it: 'Oggi',
-            ru: 'Сегодня'
-        },
-        placeholder: {
-            undefined: 'Enter your message here...',
-            it: 'Scriva il suo messagio qui...',
-            ru: 'Напишите сообщение...'
-        }
-    },
-
-    // DOM ids
-    ids: {
-        messages: '#messages',
-        input: '#input_message'
-    },
-
-    // DOM classes
-    classes: {
-        day_group: 'messages_day_group',
-        day_header: 'messages_day',
-        author_group: 'messages_author_group',
-        my_messages: 'my_messages',
-        message: 'message',
-        my_message: 'my_message',
-        same_author: 'same_author',
-        same_time: 'same_time',
-        message_time: 'message_time',
-        message_block: 'message_left_part',
-        message_author: 'message_author',
-        message_body: 'message_body'
-    },
-
-    // Data used for updating and rendering messages
-    data: {
-        messages: []
-    }
-};
+var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
+var defaultConfig = require('./config.json');
 
 // Helpers
 
