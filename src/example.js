@@ -132,6 +132,7 @@ function init() {
     onscroll(document, function (o) {
         if (o.y === 0) {
 
+            // Get the day of an oldest message
             var mess = chat.config.data.messages[0];
             var date = (mess && mess.date) || Date.now();
 
@@ -140,12 +141,16 @@ function init() {
             d.setDate(d.getDate() - 1);
             date = d.getTime();
 
+            // Join old and new messages
             data.messages = data.messages.concat(loadMessages(date));
             chat.update();
 
+            // Keep the current position of the messages' container
             var top = position().h - o.h;
             if (top > 0) {
                 document.documentElement.scrollTop = top;
+                // TODO; add this for an element
+                // TODO; add year for day caption
             }
         }
     });
