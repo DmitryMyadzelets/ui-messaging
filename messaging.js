@@ -109,31 +109,33 @@ function init() {
         .scrollDown();
 
     chat.input(function (event) {
-        if ('Enter' === event.key && event.ctrlKey) {
-            var text = tidy(this.innerHTML);
-            this.innerHTML = '';
+        if ('Enter' !== event.key) {
+            return;
+        }
 
-            if (!text.length) {
-                return;
-            }
+        var text = tidy(this.innerHTML);
+        this.innerHTML = '';
 
-            // Make the message object
-            var o = emptyMessage();
-            o.author = chat.config.me;
-            o.date = Date.now();
-            o.body = text;
+        if (!text.length) {
+            return;
+        }
 
-            data.messages.push(o);
+        // Make the message object
+        var o = emptyMessage();
+        o.author = chat.config.me;
+        o.date = Date.now();
+        o.body = text;
 
+        data.messages.push(o);
+
+        chat.update()
+            .scrollDown();
+
+        fakeReply(function (reply) {
+            data.messages.push(reply);
             chat.update()
                 .scrollDown();
-
-            fakeReply(function (reply) {
-                data.messages.push(reply);
-                chat.update()
-                    .scrollDown();
-            });
-        }
+        });
     });
 
     onscroll(document, function (o) {
