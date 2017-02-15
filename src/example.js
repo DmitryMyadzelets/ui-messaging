@@ -180,4 +180,31 @@ function init() {
 }
 
 
-document.addEventListener("DOMContentLoaded", init);
+function ready(callback) {
+    // Motivation:
+    // https://gomakethings.com/a-native-javascript-equivalent-of-jquerys-ready-method/
+    // Docs:
+    // https://developer.mozilla.org/en/docs/Web/API/Document/readyState
+    function check() {
+        switch (document.readyState) {
+        case 'loading':
+            break;
+        case 'interactive':
+            // document has been parsed but sub-resources such as
+            // images, stylesheets and frames are still loading
+            break;
+        case 'complete':
+            // document and all sub-resources have finished loading.
+            // The state indicates that the load event is about to fire.
+            callback();
+            return true;
+        }
+    }
+
+    if (!check()) {
+        document.addEventListener('readystatechange', check);
+    }
+}
+
+// Example
+ready(init);

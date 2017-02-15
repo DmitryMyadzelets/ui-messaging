@@ -1843,8 +1843,34 @@ function init() {
 }
 
 
-document.addEventListener("DOMContentLoaded", init);
+function ready(callback) {
+    // Motivation:
+    // https://gomakethings.com/a-native-javascript-equivalent-of-jquerys-ready-method/
+    // Docs:
+    // https://developer.mozilla.org/en/docs/Web/API/Document/readyState
+    function check() {
+        switch (document.readyState) {
+        case 'loading':
+            break;
+        case 'interactive':
+            // document has been parsed but sub-resources such as
+            // images, stylesheets and frames are still loading
+            break;
+        case 'complete':
+            // document and all sub-resources have finished loading.
+            // The state indicates that the load event is about to fire.
+            callback();
+            return true;
+        }
+    }
 
+    if (!check()) {
+        document.addEventListener('readystatechange', check);
+    }
+}
+
+// Example
+ready(init);
 },{"./input":16,"./messages.js":19,"./scroller":20,"./tidy-input":21,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],16:[function(require,module,exports){
 /*jslint browser: false*/
 'use strict';
