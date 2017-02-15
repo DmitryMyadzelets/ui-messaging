@@ -104,8 +104,8 @@ function init() {
         scrollme.top(o.h);
     }
 
-    chat.update()
-        .scrollDown();
+    chat.update();
+    down();
 
     chat.input = input(null, function (event) {
         if ('Enter' !== event.key) {
@@ -158,7 +158,6 @@ function init() {
             var top = scrollme.get().h - o.h;
             if (top > 0) {
                 scrollme.top(top);
-                // TODO; add year for day caption
             }
         }
     });
