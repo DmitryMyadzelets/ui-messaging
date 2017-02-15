@@ -9,7 +9,8 @@ var e = {
             x: e.scrollLeft,
             y: e.scrollTop,
             h: e.scrollHeight,
-            w: e.scrollWidth
+            w: e.scrollWidth,
+            dh: e.clientHeight
         };
     },
     top: function (e, v) {
@@ -24,7 +25,8 @@ var w = {
             x: window.pageXOffset,
             y: window.pageYOffset,
             h: document.documentElement.scrollHeight,
-            w: document.documentElement.scrollWidth
+            w: document.documentElement.scrollWidth,
+            dh: window.innerHeight
         };
     },
     top: function (ignore, v) {
@@ -39,7 +41,8 @@ var d = {
             x: document.documentElement.scrollLeft,
             y: document.documentElement.scrollTop,
             h: document.documentElement.scrollHeight,
-            w: document.documentElement.scrollWidth
+            w: document.documentElement.scrollWidth,
+            dh: document.documentElement.clientHeight
         };
     },
     top: function (ignore, v) {
@@ -54,7 +57,8 @@ var b = {
             x: document.body.scrollLeft,
             y: document.body.scrollTop,
             h: document.body.scrollHeight,
-            w: document.body.scrollWidth
+            w: document.body.scrollWidth,
+            dh: document.body.clientHeight
         };
     },
     top: function (ignore, v) {

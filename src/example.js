@@ -10,7 +10,6 @@ var input = require('./input').input;
 var tidy = require('./tidy-input');
 var scroller = require('./scroller');
 
-
 var authors = ['Alice', 'Bob', 'Lorem Ipsum'];
 var nMessages = 20; // Number of messages
 
@@ -97,12 +96,29 @@ function init() {
 
     var scrollme = scroller.bind(document);
 
-
     // Scrolls the element down
-    function down() {
-        var o = scrollme.get();
-        scrollme.top(o.h);
-    }
+    var down = (function () {
+        var timer, o, d, k, delay = 500;
+
+        function tick(t) {
+            t = t / delay;
+            k = t * (2 - t);
+            if (t > 1) {
+                timer.stop();
+                scrollme.top(o.y + d);
+            }
+            scrollme.top(o.y + d * k);
+        }
+
+        return function () {
+            o = scrollme.get();
+            d = o.h - o.y - o.dh + 1;
+            if (timer) {
+                timer.stop();
+            }
+            timer = d3.timer(tick);
+        };
+    }());
 
     chat.update();
     down();

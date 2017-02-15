@@ -68,10 +68,6 @@ function getDayString(d) {
     var date = new Date(d);
     var today = new Date().setHours(0, 0, 0, 0);
 
-    if (d === today) {
-        return this.local('today');
-    }
-
     var format = {
         //weekday: 'short',
         //year: 'numeric',
@@ -82,6 +78,11 @@ function getDayString(d) {
         format.year = 'numeric';
     }
     var day = date.toLocaleDateString(this.config.locale, format);
+
+    if (d === today) {
+        day = this.local('today') + ', ' + day;
+    }
+
     return day;
 }
 

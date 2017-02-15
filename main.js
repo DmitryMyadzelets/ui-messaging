@@ -1673,7 +1673,6 @@ var input = require('./input').input;
 var tidy = require('./tidy-input');
 var scroller = require('./scroller');
 
-
 var authors = ['Alice', 'Bob', 'Lorem Ipsum'];
 var nMessages = 20; // Number of messages
 
@@ -1760,12 +1759,29 @@ function init() {
 
     var scrollme = scroller.bind(document);
 
-
     // Scrolls the element down
-    function down() {
-        var o = scrollme.get();
-        scrollme.top(o.h);
-    }
+    var down = (function () {
+        var timer, o, d, k, delay = 500;
+
+        function tick(t) {
+            t = t / delay;
+            k = t * (2 - t);
+            if (t > 1) {
+                timer.stop();
+                scrollme.top(o.y + d);
+            }
+            scrollme.top(o.y + d * k);
+        }
+
+        return function () {
+            o = scrollme.get();
+            d = o.h - o.y - o.dh + 1;
+            if (timer) {
+                timer.stop();
+            }
+            timer = d3.timer(tick);
+        };
+    }());
 
     chat.update();
     down();
@@ -1957,10 +1973,6 @@ function getDayString(d) {
     var date = new Date(d);
     var today = new Date().setHours(0, 0, 0, 0);
 
-    if (d === today) {
-        return this.local('today');
-    }
-
     var format = {
         //weekday: 'short',
         //year: 'numeric',
@@ -1971,6 +1983,11 @@ function getDayString(d) {
         format.year = 'numeric';
     }
     var day = date.toLocaleDateString(this.config.locale, format);
+
+    if (d === today) {
+        day = this.local('today') + ', ' + day;
+    }
+
     return day;
 }
 
@@ -2161,7 +2178,8 @@ var e = {
             x: e.scrollLeft,
             y: e.scrollTop,
             h: e.scrollHeight,
-            w: e.scrollWidth
+            w: e.scrollWidth,
+            dh: e.clientHeight
         };
     },
     top: function (e, v) {
@@ -2176,7 +2194,8 @@ var w = {
             x: window.pageXOffset,
             y: window.pageYOffset,
             h: document.documentElement.scrollHeight,
-            w: document.documentElement.scrollWidth
+            w: document.documentElement.scrollWidth,
+            dh: window.innerHeight
         };
     },
     top: function (ignore, v) {
@@ -2191,7 +2210,8 @@ var d = {
             x: document.documentElement.scrollLeft,
             y: document.documentElement.scrollTop,
             h: document.documentElement.scrollHeight,
-            w: document.documentElement.scrollWidth
+            w: document.documentElement.scrollWidth,
+            dh: document.documentElement.clientHeight
         };
     },
     top: function (ignore, v) {
@@ -2206,7 +2226,8 @@ var b = {
             x: document.body.scrollLeft,
             y: document.body.scrollTop,
             h: document.body.scrollHeight,
-            w: document.body.scrollWidth
+            w: document.body.scrollWidth,
+            dh: document.body.clientHeight
         };
     },
     top: function (ignore, v) {
