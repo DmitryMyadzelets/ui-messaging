@@ -1,4 +1,5 @@
 /*jslint browser: false*/
+/*global window*/
 'use strict';
 
 var shortId = require('shortid');
@@ -105,14 +106,14 @@ function init() {
             k = t * (2 - t);
             if (t > 1) {
                 timer.stop();
-                scrollme.top(o.y + d);
+                scrollme.top(o.h);
             }
             scrollme.top(o.y + d * k);
         }
 
         return function () {
             o = scrollme.get();
-            d = o.h - o.y - o.dh + 1;
+            d = o.h - o.y - o.dh;
             if (timer) {
                 timer.stop();
             }
@@ -185,7 +186,15 @@ function ready(callback) {
     // https://gomakethings.com/a-native-javascript-equivalent-of-jquerys-ready-method/
     // Docs:
     // https://developer.mozilla.org/en/docs/Web/API/Document/readyState
-    function check() {
+    var check, done;
+
+    done = function () {
+        document.removeEventListener('readystatechange', check);
+        window.removeEventListener('load', done);
+        callback();
+    };
+
+    check = function () {
         switch (document.readyState) {
         case 'loading':
             break;
@@ -196,13 +205,14 @@ function ready(callback) {
         case 'complete':
             // document and all sub-resources have finished loading.
             // The state indicates that the load event is about to fire.
-            callback();
+            done();
             return true;
         }
-    }
+    };
 
     if (!check()) {
         document.addEventListener('readystatechange', check);
+        window.addEventListener('load', done);
     }
 }
 
