@@ -247,34 +247,6 @@ Messenger.prototype.updateMessages = function (parent) {
 };
 
 
-// Returns true if the DOM element is scrollable
-function scrollable(element) {
-    return element.scrollHeight > element.clientHeight;
-}
-
-
-// Returns scrollable element or undefined
-function findScrollable(element) {
-    // Find which container is scrollable
-    while (element && !scrollable(element)) {
-        element = element.parentNode;
-    }
-    return element;
-}
-
-
-// Scrolls down the messages
-Messenger.prototype.scrollDown = function () {
-    var e = findScrollable(d3.select(this.config.ids.messages).node());
-
-    d3.select(e).each(function () {
-        // [selector].scrollIntoView();
-        this.scrollTop = this.scrollHeight;
-    });
-
-    return this;
-};
-
 function chat(config) {
     return new Messenger(config);
 }
