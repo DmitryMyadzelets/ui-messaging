@@ -6,7 +6,7 @@ var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
 var input = require('./input').input;
 var tidy = require('./tidy-input');
-var underscroll = require('./underscroll');
+var scroller = require('./scroller');
 var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
 
 
@@ -81,7 +81,7 @@ function onscroll(element, callback) {
     d3.select(element).on('scroll', function () {
         // var ev = d3.event;
         if (!locked) {
-            o = underscroll.of(element);
+            o = scroller.of(element).get();
             d3.timeout(tick);
         }
         locked = true;
@@ -127,7 +127,7 @@ function init() {
         });
     });
 
-    var position = underscroll.method(document);
+    var scr = scroller.bind(document);
 
     onscroll(document, function (o) {
         if (o.y === 0) {
@@ -146,10 +146,9 @@ function init() {
             chat.update();
 
             // Keep the current position of the messages' container
-            var top = position().h - o.h;
+            var top = scr.get().h - o.h;
             if (top > 0) {
-                document.documentElement.scrollTop = top;
-                // TODO; add this for an element
+                scr.top(top);
                 // TODO; add year for day caption
             }
         }
