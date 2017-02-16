@@ -1849,16 +1849,22 @@ function ready(callback) {
     // https://gomakethings.com/a-native-javascript-equivalent-of-jquerys-ready-method/
     // Docs:
     // https://developer.mozilla.org/en/docs/Web/API/Document/readyState
-    var check, done;
+    var loading, done;
 
     done = function () {
-        document.removeEventListener('readystatechange', check);
+
+        alert('D', window, document);
+
+        document.removeEventListener('readystatechange', loading);
         window.removeEventListener('load', done);
         callback();
     };
 
-    check = function () {
-        return document.readyState !== 'loading';
+    loading = function () {
+        if (document.readyState === 'loading') {
+            return true;
+        }
+        done();
         // switch (document.readyState) {
         // case 'loading':
         //     break;
@@ -1874,14 +1880,17 @@ function ready(callback) {
         // }
     };
 
-    if (!check()) {
-        document.addEventListener('readystatechange', check);
+    if (loading()) {
+        document.addEventListener('readystatechange', loading);
         window.addEventListener('load', done);
     }
 }
 
 // Example
 ready(init);
+
+alert('C', window, document);
+
 },{"./input":16,"./messages.js":19,"./scroller":20,"./tidy-input":21,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],16:[function(require,module,exports){
 /*jslint browser: false*/
 'use strict';

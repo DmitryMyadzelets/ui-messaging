@@ -186,17 +186,22 @@ function ready(callback) {
     // https://gomakethings.com/a-native-javascript-equivalent-of-jquerys-ready-method/
     // Docs:
     // https://developer.mozilla.org/en/docs/Web/API/Document/readyState
-    var check, done;
+    var loading, done;
 
     done = function () {
+
         alert('D', window, document);
-        document.removeEventListener('readystatechange', check);
+
+        document.removeEventListener('readystatechange', loading);
         window.removeEventListener('load', done);
         callback();
     };
 
-    check = function () {
-        return document.readyState !== 'loading';
+    loading = function () {
+        if (document.readyState === 'loading') {
+            return true;
+        }
+        done();
         // switch (document.readyState) {
         // case 'loading':
         //     break;
@@ -212,8 +217,8 @@ function ready(callback) {
         // }
     };
 
-    if (!check()) {
-        document.addEventListener('readystatechange', check);
+    if (loading()) {
+        document.addEventListener('readystatechange', loading);
         window.addEventListener('load', done);
     }
 }
