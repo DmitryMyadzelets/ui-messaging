@@ -189,6 +189,7 @@ function ready(callback) {
     var check, done;
 
     done = function () {
+        alert('D', window, document);
         document.removeEventListener('readystatechange', check);
         window.removeEventListener('load', done);
         callback();
@@ -219,3 +220,5 @@ function ready(callback) {
 
 // Example
 ready(init);
+
+alert('C', window, document);
