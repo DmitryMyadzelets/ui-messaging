@@ -226,4 +226,4 @@ function ready(callback) {
 // Example
 ready(init);
 
-alert('C', window, document);
+alert('C');
