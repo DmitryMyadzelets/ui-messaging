@@ -17,7 +17,7 @@ function Input(config, callback) {
         .attr('placeholder', this.local('placeholder'))
         .text('')
         .each(function () {
-            this.addEventListener('keydown', callback);
+            this.addEventListener('keydown', callback, false);
         });
         // .on('keydown', function () {
         //     callback.call(this, d3.event);
