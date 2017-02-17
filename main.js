@@ -1802,7 +1802,7 @@ function init() {
     im(typeof window.WebSocket);
 
     chat.input = input(null, function (event) {
-        alert(Object.keys(event.key).length);
+        alert(event.key, Object.keys(event.key));
         if ('Enter' !== event.key) {
             return;
         }
@@ -1859,9 +1859,6 @@ function ready(callback) {
     var loading, done;
 
     done = function () {
-
-        console.log('done');
-
         document.removeEventListener('readystatechange', loading);
         window.removeEventListener('load', done);
         callback();
