@@ -1799,8 +1799,6 @@ function init() {
         down();
     }
 
-    im(typeof window.WebSocket);
-
     chat.input = input(null, function (event) {
         if (13 !== event.keyCode) {
             return;
@@ -1912,7 +1910,7 @@ function Input(config, callback) {
         .attr('placeholder', this.local('placeholder'))
         .text('')
         .each(function () {
-            this.addEventListener('keydown', callback, false);
+            this.addEventListener('keydown', callback);
         });
 }
 

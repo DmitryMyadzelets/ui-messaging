@@ -136,8 +136,6 @@ function init() {
         down();
     }
 
-    im(typeof window.WebSocket);
-
     chat.input = input(null, function (event) {
         if (13 !== event.keyCode) {
             return;

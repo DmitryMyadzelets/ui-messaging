@@ -17,7 +17,7 @@ function Input(config, callback) {
         .attr('placeholder', this.local('placeholder'))
         .text('')
         .each(function () {
-            this.addEventListener('keydown', callback, false);
+            this.addEventListener('keydown', callback);
         });
 }
 
