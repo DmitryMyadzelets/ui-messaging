@@ -1896,14 +1896,15 @@ alert('C');
 /*jslint browser: false*/
 'use strict';
 
-var d3 = Object.assign(require('d3-selection'));
+var mergeObject = require('./polyfills').mergeObject;
+var d3 = require('d3-selection');
 var defaults = require('./config.json');
 var l10n = require('./l10n');
 
 
 function Input(config, callback) {
     this.config = Object.create(defaults);
-    Object.assign(this.config, config);
+    mergeObject(this.config, config);
 
     this.local = l10n.locale(this.config.locale);
 
@@ -1920,7 +1921,7 @@ function constructor(config, callback) {
 }
 
 exports.input = constructor;
-},{"./config.json":14,"./l10n":18,"d3-selection":1}],17:[function(require,module,exports){
+},{"./config.json":14,"./l10n":18,"./polyfills":20,"d3-selection":1}],17:[function(require,module,exports){
 module.exports={
     "today":{
         "undefined":"Today",
