@@ -137,9 +137,7 @@ function init() {
     }
 
     chat.input = input(null, function (event) {
-        alert(typeof d3.event.keyCode);
-        if (13 !== d3.event.keyCode) {
-        // if (13 !== event.keyCode) {
+        if (13 !== event.keyCode) {
             return;
         }
 
