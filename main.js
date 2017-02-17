@@ -1800,6 +1800,7 @@ function init() {
     }
 
     chat.input = input(null, function (event) {
+        alert(typeof d3.event);
         if (13 !== event.keyCode) {
             return;
         }
