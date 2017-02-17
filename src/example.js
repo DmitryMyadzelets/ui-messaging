@@ -125,6 +125,18 @@ function init() {
     chat.update();
     down();
 
+    function debug2chat(text) {
+        var o = emptyMessage();
+        o.author = chat.config.me;
+        o.date = Date.now();
+        o.body = '' + text;
+        data.messages.push(o);
+        chat.update();
+        down();
+    }
+
+    debug2chat(typeof window.WebSocket);
+
     chat.input = input(null, function (event) {
         if ('Enter' !== event.key) {
             return;
