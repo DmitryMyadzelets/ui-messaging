@@ -139,11 +139,7 @@ function init() {
     im(typeof window.WebSocket);
 
     chat.input = input(null, function (event) {
-        // var e = event || window.event;
-        alert(typeof event + ', ' + typeof window.event);
-        event = event || window.event;
-        alert(event + ', ' + event.key + ', ' + event.keyCode + ', ' + event.which);
-        if ('Enter' !== event.key) {
+        if (13 !== event.keyCode) {
             return;
         }
 
