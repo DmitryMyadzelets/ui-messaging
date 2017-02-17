@@ -2214,10 +2214,11 @@ function chat(config) {
 exports.chat = chat;
 
 },{"./config.json":14,"./l10n":18,"./polyfills":20,"d3-selection":1,"d3-timer":2}],20:[function(require,module,exports){
+/*jslint browser: false*/
+'use strict';
 
 // Alternative for Object.assign
 function mergeObject(target) {
-    'use strict';
     var i, j, m, n, source, key, keys;
     m = arguments.length;
     for (i = 1; i < m; i += 1) {
@@ -2232,6 +2233,13 @@ function mergeObject(target) {
         }
     }
     return target;
+}
+
+
+if (!Date.now) {
+    Date.now = function now() {
+        return new Date().getTime();
+    };
 }
 
 exports.mergeObject = mergeObject;

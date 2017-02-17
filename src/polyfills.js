@@ -1,7 +1,8 @@
+/*jslint browser: false*/
+'use strict';
 
 // Alternative for Object.assign
 function mergeObject(target) {
-    'use strict';
     var i, j, m, n, source, key, keys;
     m = arguments.length;
     for (i = 1; i < m; i += 1) {
@@ -16,6 +17,13 @@ function mergeObject(target) {
         }
     }
     return target;
+}
+
+
+if (!Date.now) {
+    Date.now = function now() {
+        return new Date().getTime();
+    };
 }
 
 exports.mergeObject = mergeObject;
