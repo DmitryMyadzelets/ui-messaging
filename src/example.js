@@ -140,7 +140,7 @@ function init() {
 
     chat.input = input(null, function (event) {
         // var e = event || window.event;
-        alert(typeof event + ', ' + typeof window.event);
+        alert(typeof event.key + ', ' + typeof window.event.key);
         if ('Enter' !== event.key) {
             return;
         }
