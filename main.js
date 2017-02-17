@@ -1802,6 +1802,7 @@ function init() {
     im(typeof window.WebSocket);
 
     chat.input = input(null, function (event) {
+        alert(event.key);
         if ('Enter' !== event.key) {
             return;
         }
@@ -1913,12 +1914,8 @@ function Input(config, callback) {
 
     d3.select(this.config.ids.input)
         .attr('placeholder', this.local('placeholder'))
-        .text(function () {
-            alert('text');
-            return '';
-        })
+        .text('')
         .on('keydown', function () {
-            alert('keydown');
             callback.call(this, d3.event);
         });
 }
