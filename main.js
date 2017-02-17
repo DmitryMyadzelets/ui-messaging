@@ -1805,7 +1805,7 @@ function init() {
         // var e = event || window.event;
         alert(typeof event + ', ' + typeof window.event);
         event = event || window.event;
-        alert(event + ', ' + event.key + ', ' + event.keyCode);
+        alert(event + ', ' + event.key + ', ' + event.keyCode + ', ' + event.which);
         if ('Enter' !== event.key) {
             return;
         }
