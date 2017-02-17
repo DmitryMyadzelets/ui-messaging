@@ -1,6 +1,4 @@
-(function e(t,n,r){
-  alert('test :)');
-  function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // https://d3js.org/d3-selection/ Version 1.0.3. Copyright 2016 Mike Bostock.
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -1319,7 +1317,7 @@ function simplePluralize(string) {
 
 module.exports = generator;
 
-},{"./dictionary":3,"os":22}],5:[function(require,module,exports){
+},{"./dictionary":3,"os":23}],5:[function(require,module,exports){
 'use strict';
 module.exports = require('./lib/index');
 
@@ -1669,7 +1667,8 @@ module.exports={
 
 var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
-var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
+var mergeObject = require('./polyfills').mergeObject;
+var d3 = mergeObject(require('d3-selection'), require('d3-timer'));
 
 var messaging = require('./messages.js');
 var input = require('./input').input;
@@ -1891,9 +1890,9 @@ function ready(callback) {
 // Example
 ready(init);
 
-alert('C', window, document);
+alert('C');
 
-},{"./input":16,"./messages.js":19,"./scroller":20,"./tidy-input":21,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],16:[function(require,module,exports){
+},{"./input":16,"./messages.js":19,"./polyfills":20,"./scroller":21,"./tidy-input":22,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],16:[function(require,module,exports){
 /*jslint browser: false*/
 'use strict';
 
@@ -1959,7 +1958,8 @@ exports.locale = constructor;
 // Note, that when you use Object.assign({}, require('d3-selection')) the d3.event object is null
 // https://github.com/d3/d3/issues/2733
 // https://github.com/d3/d3-selection#event
-var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
+var mergeObject = require('./polyfills').mergeObject;
+var d3 = mergeObject(require('d3-selection'), require('d3-timer'));
 var defaults = require('./config.json');
 var l10n = require('./l10n');
 
@@ -2214,7 +2214,27 @@ function chat(config) {
 
 exports.chat = chat;
 
-},{"./config.json":14,"./l10n":18,"d3-selection":1,"d3-timer":2}],20:[function(require,module,exports){
+},{"./config.json":14,"./l10n":18,"./polyfills":20,"d3-selection":1,"d3-timer":2}],20:[function(require,module,exports){
+
+// Alternative for Object.assign
+function mergeObject(target) {
+    'use strict';
+    var i, j, m, n, source, key, keys;
+    m = arguments.length;
+    for (i = 1; i < m; i += 1) {
+        source = arguments[i];
+        keys = Object.keys(source);
+        n = keys.length;
+        for (j = 0; j < n; j += 1) {
+            key = keys[j];
+            target[key] = source[key];
+        }
+    }
+    return target;
+}
+
+exports.mergeObject = mergeObject;
+},{}],21:[function(require,module,exports){
 /*jslint browser: false*/
 /*global window, HTMLDocument*/
 'use strict';
@@ -2321,7 +2341,7 @@ function bind(element) {
 
 exports.of = of;
 exports.bind = bind;
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 module.exports = function (html) {
     'use strict';
     return html
@@ -2333,7 +2353,7 @@ module.exports = function (html) {
         .replace(/(<br>)*$/i, '') // ... and at the end
         .replace(/(<br>){3,}/gi, '<br><br>'); // No more then two <br>
 };
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 exports.endianness = function () { return 'LE' };
 
 exports.hostname = function () {

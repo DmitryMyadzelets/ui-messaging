@@ -6,7 +6,8 @@
 // Note, that when you use Object.assign({}, require('d3-selection')) the d3.event object is null
 // https://github.com/d3/d3/issues/2733
 // https://github.com/d3/d3-selection#event
-var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
+var mergeObject = require('./polyfills').mergeObject;
+var d3 = mergeObject(require('d3-selection'), require('d3-timer'));
 var defaults = require('./config.json');
 var l10n = require('./l10n');
 

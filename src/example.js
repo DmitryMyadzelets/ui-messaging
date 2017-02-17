@@ -4,7 +4,8 @@
 
 var shortId = require('shortid');
 var lipsum = require('lorem-ipsum');
-var d3 = Object.assign(require('d3-selection'), require('d3-timer'));
+var mergeObject = require('./polyfills').mergeObject;
+var d3 = mergeObject(require('d3-selection'), require('d3-timer'));
 
 var messaging = require('./messages.js');
 var input = require('./input').input;
