@@ -6,11 +6,13 @@ function mergeObject(target) {
     m = arguments.length;
     for (i = 1; i < m; i += 1) {
         source = arguments[i];
-        keys = Object.keys(source);
-        n = keys.length;
-        for (j = 0; j < n; j += 1) {
-            key = keys[j];
-            target[key] = source[key];
+        if ('object' === typeof source) {
+            keys = Object.keys(source);
+            n = keys.length;
+            for (j = 0; j < n; j += 1) {
+                key = keys[j];
+                target[key] = source[key];
+            }
         }
     }
     return target;
