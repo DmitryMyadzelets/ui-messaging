@@ -6,14 +6,14 @@ function mergeObject(target) {
     m = arguments.length;
     for (i = 1; i < m; i += 1) {
         source = arguments[i];
-        try {
+        if (source && typeof source === 'object') {
             keys = Object.keys(source);
             n = keys.length;
             for (j = 0; j < n; j += 1) {
                 key = keys[j];
                 target[key] = source[key];
             }
-        } catch (ignore) {}
+        }
     }
     return target;
 }

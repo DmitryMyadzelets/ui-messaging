@@ -1854,7 +1854,7 @@ function ready(callback) {
 
     done = function () {
 
-        alert('D', window, document);
+        alert('done', window, document);
 
         document.removeEventListener('readystatechange', loading);
         window.removeEventListener('load', done);
@@ -1889,8 +1889,6 @@ function ready(callback) {
 
 // Example
 ready(init);
-
-alert('C');
 
 },{"./input":16,"./messages.js":19,"./polyfills":20,"./scroller":21,"./tidy-input":22,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],16:[function(require,module,exports){
 /*jslint browser: false*/
@@ -2224,14 +2222,14 @@ function mergeObject(target) {
     m = arguments.length;
     for (i = 1; i < m; i += 1) {
         source = arguments[i];
-        try {
+        if (source && typeof source === 'object') {
             keys = Object.keys(source);
             n = keys.length;
             for (j = 0; j < n; j += 1) {
                 key = keys[j];
                 target[key] = source[key];
             }
-        } catch (ignore) {}
+        }
     }
     return target;
 }
