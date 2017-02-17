@@ -2044,7 +2044,7 @@ function getDayString(d) {
 function Messenger(config) {
     // Make own config s.t. the defaults remain intact for other instances
     this.config = Object.create(defaults);
-    Object.assign(this.config, config);
+    mergeObject(this.config, config);
 
     this.getDayString = getDayString.bind(this);
     this.local = l10n.locale(this.config.locale);
