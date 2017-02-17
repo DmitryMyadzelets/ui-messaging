@@ -1802,9 +1802,8 @@ function init() {
     im(typeof window.WebSocket);
 
     chat.input = input(null, function (event) {
-        var e = event || window.event;
-        console.log(e);
-        alert(typeof e);
+        // var e = event || window.event;
+        alert(typeof event + ', ' + typeof window.event);
         if ('Enter' !== event.key) {
             return;
         }
