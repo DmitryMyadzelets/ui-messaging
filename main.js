@@ -1634,7 +1634,6 @@ module.exports = 0;
 
 },{}],14:[function(require,module,exports){
 module.exports={
-    "me":"Bob",
     "ids":{
         "messages":"#messages",
         "input":"#input_message"
@@ -1676,6 +1675,7 @@ var tidy = require('./tidy-input');
 var scroller = require('./scroller');
 
 var authors = ['Alice', 'Bob', 'Lorem Ipsum'];
+var me = 'Bob';
 var nMessages = 20; // Number of messages
 
 
@@ -1756,6 +1756,7 @@ function onscroll(element, callback) {
 
 function init() {
     var chat = messaging.chat({
+        me: me,
         data: data
     });
 
@@ -1788,9 +1789,10 @@ function init() {
     chat.update();
     down();
 
+    // Instant message
     function im(text) {
         var o = emptyMessage();
-        o.author = chat.config.me;
+        o.author = me;
         o.date = Date.now();
         o.body = '' + text;
 
@@ -1798,6 +1800,7 @@ function init() {
         chat.update();
         down();
     }
+
 
     chat.input = input(null, function (event) {
         if (13 !== event.keyCode) {
@@ -1811,10 +1814,15 @@ function init() {
             return;
         }
 
-        // Make the message object
         im(text);
 
+        // Imitate reply
         fakeReply(function (reply) {
+            var them = authors.filter(function (author) {
+                return author !== me;
+            });
+            reply.author = them[them.length * Math.random() | 0];
+
             data.messages.push(reply);
             chat.update();
             down();
@@ -1848,7 +1856,8 @@ function init() {
 }
 
 
-function ready(callback) {
+// Invokes callback when DOM is ready for manipulation
+(function (callback) {
     // Motivation:
     // https://gomakethings.com/a-native-javascript-equivalent-of-jquerys-ready-method/
     // Docs:
@@ -1866,29 +1875,13 @@ function ready(callback) {
             return true;
         }
         done();
-        // switch (document.readyState) {
-        // case 'loading':
-        //     break;
-        // case 'interactive':
-        //     // document has been parsed but sub-resources such as
-        //     // images, stylesheets and frames are still loading
-        //     break;
-        // case 'complete':
-        //     // document and all sub-resources have finished loading.
-        //     // The state indicates that the load event is about to fire.
-        //     done();
-        //     return true;
-        // }
     };
 
     if (loading()) {
         document.addEventListener('readystatechange', loading);
         window.addEventListener('load', done);
     }
-}
-
-// Example
-ready(init);
+}(init));
 
 },{"./input":16,"./messages.js":19,"./polyfills":20,"./scroller":21,"./tidy-input":22,"d3-selection":1,"d3-timer":2,"lorem-ipsum":4,"shortid":5}],16:[function(require,module,exports){
 /*jslint browser: false*/

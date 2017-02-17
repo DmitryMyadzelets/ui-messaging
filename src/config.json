@@ -1,5 +1,4 @@
 {
-    "me":"Bob",
     "ids":{
         "messages":"#messages",
         "input":"#input_message"
