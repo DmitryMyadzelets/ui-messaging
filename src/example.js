@@ -191,7 +191,7 @@ function ready(callback) {
 
     done = function () {
 
-        alert('done', window, document);
+        console.log('done');
 
         document.removeEventListener('readystatechange', loading);
         window.removeEventListener('load', done);
