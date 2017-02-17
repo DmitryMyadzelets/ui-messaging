@@ -1,1 +1,0 @@
-console.error("Error: Cannot find module '/home/dmitry/projects/ui/ui-messaging/src/src/example.js' from '/home/dmitry/projects/ui/ui-messaging/src'");
