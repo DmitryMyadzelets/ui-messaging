@@ -9,6 +9,7 @@ var l10n = require('./l10n');
 
 function Input(config, callback) {
     this.config = Object.create(defaults);
+    alert(typeof this.config);
     mergeObject(this.config, config);
 
     this.local = l10n.locale(this.config.locale);

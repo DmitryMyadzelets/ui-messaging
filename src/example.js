@@ -125,17 +125,18 @@ function init() {
     chat.update();
     down();
 
-    function debug2chat(text) {
+    function im(text) {
         var o = emptyMessage();
         o.author = chat.config.me;
         o.date = Date.now();
         o.body = '' + text;
+
         data.messages.push(o);
         chat.update();
         down();
     }
 
-    debug2chat(typeof window.WebSocket);
+    im(typeof window.WebSocket);
 
     chat.input = input(null, function (event) {
         if ('Enter' !== event.key) {
@@ -150,15 +151,7 @@ function init() {
         }
 
         // Make the message object
-        var o = emptyMessage();
-        o.author = chat.config.me;
-        o.date = Date.now();
-        o.body = text;
-
-        data.messages.push(o);
-
-        chat.update();
-        down();
+        im(text);
 
         fakeReply(function (reply) {
             data.messages.push(reply);
