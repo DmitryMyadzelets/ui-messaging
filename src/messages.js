@@ -50,7 +50,7 @@ var nestMessages = (function () {
             };
             array.push(obj);
         }
-        nestAuthor(message, obj.values);
+        // nestAuthor(message, obj.values);
     }
 
     return function (messages) {
