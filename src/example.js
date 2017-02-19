@@ -139,6 +139,9 @@ function init() {
         down();
     }
 
+    im(Date.now());
+    im(new Date().getTime());
+
 
     chat.input = input(null, function (event) {
         if (13 !== event.keyCode) {
