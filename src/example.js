@@ -139,12 +139,17 @@ function init() {
         down();
     }
 
-    im(Date.now() + '\n' + 'test');
-    im(new Date().getTime());
-    var d = new Date();
-    im(d.setHours(0, 0, 0, 0));
-    im(d.toLocaleDateString(undefined, {month: 'long'}));
-
+    // Debugging
+    (function () {
+        var d = new Date();
+        im(Date.now()
+                + '<br>' + d.getTime()
+                + '<br>' + d.setHours(0, 0, 0, 0)
+                + '<br>' + d.toLocaleDateString()
+                + '<br>' + d.toLocaleDateString(undefined, {month: 'long'})
+                + '<br>' + d.toLocaleDateString('it', {month: 'long'})
+                + '<br> 8-)');
+    }());
 
     chat.input = input(null, function (event) {
         if (13 !== event.keyCode) {
