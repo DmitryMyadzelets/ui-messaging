@@ -65,6 +65,7 @@ var nestMessages = (function () {
 
 // Returns string representing a day, given unixTime
 function getDayString(d) {
+    return d.key;
     d = +d.key;
     var date = new Date(d);
     var today = new Date().setHours(0, 0, 0, 0);
