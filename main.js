@@ -2004,7 +2004,7 @@ var nestMessages = (function () {
         var day = new Date(message.date).setHours(0, 0, 0, 0);
         if (day !== obj.key) {
             obj = {
-                key: day,
+                key: '' + day,
                 values: []
             };
             array.push(obj);
