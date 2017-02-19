@@ -148,8 +148,15 @@ function init() {
                 + '<br>' + d.toLocaleDateString()
                 + '<br>' + d.toLocaleDateString(undefined, {month: 'long'})
                 + '<br>' + d.toLocaleDateString('it', {month: 'long'})
-                + '<br>' + [d.getDate(), d.getMonth(), d.getFullYear()].join('/')
                 + '<br> 8-)');
+    }());
+
+    // Debugging
+    (function () {
+        im('messages: ' + data.messages.length
+                + '<br>' + chat.data.messages.length
+                + '<br>' + chat.data.nested.length
+                + '<br> :-)');
     }());
 
     chat.input = input(null, function (event) {

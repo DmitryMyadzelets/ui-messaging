@@ -1810,8 +1810,15 @@ function init() {
                 + '<br>' + d.toLocaleDateString()
                 + '<br>' + d.toLocaleDateString(undefined, {month: 'long'})
                 + '<br>' + d.toLocaleDateString('it', {month: 'long'})
-                + '<br>' + [d.getDate(), d.getMonth(), d.getFullYear()].join('/')
                 + '<br> 8-)');
+    }());
+
+    // Debugging
+    (function () {
+        im('messages: ' + data.messages.length
+                + '<br>' + chat.data.messages.length
+                + '<br>' + chat.data.nested.length
+                + '<br> :-)');
     }());
 
     chat.input = input(null, function (event) {
@@ -2004,7 +2011,7 @@ var nestMessages = (function () {
         var day = new Date(message.date).setHours(0, 0, 0, 0);
         if (day !== obj.key) {
             obj = {
-                key: '' + day,
+                key: day,
                 values: []
             };
             array.push(obj);
@@ -2074,6 +2081,7 @@ Messenger.prototype.update = function () {
 
     var messages = config.data.messages.sort(sortComparator);
     var nested = nestMessages(messages);
+    config.data.nested = nested; // DEBUG
 
     var root = d3.select(config.ids.messages);
 

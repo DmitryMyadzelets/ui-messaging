@@ -45,7 +45,7 @@ var nestMessages = (function () {
         var day = new Date(message.date).setHours(0, 0, 0, 0);
         if (day !== obj.key) {
             obj = {
-                key: '' + day,
+                key: day,
                 values: []
             };
             array.push(obj);
@@ -115,6 +115,7 @@ Messenger.prototype.update = function () {
 
     var messages = config.data.messages.sort(sortComparator);
     var nested = nestMessages(messages);
+    config.data.nested = nested; // DEBUG
 
     var root = d3.select(config.ids.messages);
 
