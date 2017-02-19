@@ -156,6 +156,7 @@ function init() {
         im('messages: ' + data.messages.length
                 + '<br>' + chat.config.data.messages.length
                 + '<br>' + chat.config.data.nested.length
+                + '<br>' + [][-1]
                 + '<br> :-)');
     }());
 
