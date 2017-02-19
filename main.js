@@ -2032,7 +2032,7 @@ function getDayString(d) {
     }
     var day = date.toLocaleDateString(this.config.locale, format);
 
-    if (d === today) {
+    if (d === today.getTime()) {
         day = this.local('today') + ', ' + day;
     }
 
