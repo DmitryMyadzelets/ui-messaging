@@ -1810,7 +1810,7 @@ function init() {
                 + '<br>' + d.toLocaleDateString()
                 + '<br>' + d.toLocaleDateString(undefined, {month: 'long'})
                 + '<br>' + d.toLocaleDateString('it', {month: 'long'})
-                + '<br>' + [d.getDay(), d.getMonth(), d.getFullYear()].join('/')
+                + '<br>' + [d.getDate(), d.getMonth(), d.getFullYear()].join('/')
                 + '<br> 8-)');
     }());
 
@@ -2037,7 +2037,8 @@ function getDayString(d) {
     if (date.getFullYear() !== new Date(today).getFullYear()) {
         format.year = 'numeric';
     }
-    var day = date.toLocaleDateString(this.config.locale, format);
+    // var day = date.toLocaleDateString(this.config.locale, format);
+    var day = '' + d; // DEBUG
 
     if (d === today) {
         day = this.local('today') + ', ' + day;

@@ -148,7 +148,7 @@ function init() {
                 + '<br>' + d.toLocaleDateString()
                 + '<br>' + d.toLocaleDateString(undefined, {month: 'long'})
                 + '<br>' + d.toLocaleDateString('it', {month: 'long'})
-                + '<br>' + [d.getDay(), d.getMonth(), d.getFullYear()].join('/')
+                + '<br>' + [d.getDate(), d.getMonth(), d.getFullYear()].join('/')
                 + '<br> 8-)');
     }());
 
