@@ -42,7 +42,7 @@ var nestMessages = (function () {
     // Nests a message into array considering its day
     function nestDay(message, array) {
         var obj = array[array.length - 1] || {};
-        var day = new Date(message.date).setHours(0, 0, 0, 0);
+        var day = '' + new Date(message.date).setHours(0, 0, 0, 0);
         if (day !== obj.key) {
             obj = {
                 key: day,
