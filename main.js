@@ -1801,8 +1801,11 @@ function init() {
         down();
     }
 
-    im(Date.now());
+    im(Date.now() + '\n' + 'test');
     im(new Date().getTime());
+    var d = new Date();
+    im(d.setHours(0, 0, 0, 0));
+    im(d.toLocaleDateString(undefined, {month: 'long'}));
 
 
     chat.input = input(null, function (event) {
