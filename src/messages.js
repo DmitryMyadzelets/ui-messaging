@@ -42,7 +42,11 @@ var nestMessages = (function () {
     // Nests a message into array considering its day
     function nestDay(message, array) {
         var obj = array[array.length - 1] || {};
-        var day = '' + new Date(message.date).setHours(0, 0, 0, 0);
+        var day = new Date(message.date);
+        // Bug: if you chain setHours(), it returns Number or Formatted UTC Time
+        // (depends on browser), e.g. 1487458800000 or "Sun Feb 19 2017 0:0:0 GMT+0100 (CET)"
+        day.setHours(0, 0, 0, 0);
+        day = day.getTime();
         if (day !== obj.key) {
             obj = {
                 key: day,
@@ -50,7 +54,7 @@ var nestMessages = (function () {
             };
             array.push(obj);
         }
-        // nestAuthor(message, obj.values);
+        nestAuthor(message, obj.values);
     }
 
     return function (messages) {
@@ -65,7 +69,6 @@ var nestMessages = (function () {
 
 // Returns string representing a day, given unixTime
 function getDayString(d) {
-    return d.key;
     d = +d.key;
     var date = new Date(d);
     var today = new Date().setHours(0, 0, 0, 0);
