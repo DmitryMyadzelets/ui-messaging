@@ -71,7 +71,8 @@ var nestMessages = (function () {
 function getDayString(d) {
     d = +d.key;
     var date = new Date(d);
-    var today = new Date().setHours(0, 0, 0, 0);
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     var format = {
         //weekday: 'short',
@@ -79,11 +80,10 @@ function getDayString(d) {
         month: 'long',
         day: 'numeric'
     };
-    if (date.getFullYear() !== new Date(today).getFullYear()) {
+    if (date.getFullYear() !== today.getFullYear()) {
         format.year = 'numeric';
     }
-    // var day = date.toLocaleDateString(this.config.locale, format);
-    var day = '' + d; // DEBUG
+    var day = date.toLocaleDateString(this.config.locale, format);
 
     if (d === today) {
         day = this.local('today') + ', ' + day;

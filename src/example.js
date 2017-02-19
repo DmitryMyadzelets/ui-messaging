@@ -139,26 +139,6 @@ function init() {
         down();
     }
 
-    // Debugging
-    // (function () {
-    //     var d = new Date();
-    //     im(Date.now()
-    //             + '<br>' + d.getTime()
-    //             + '<br>' + d.setHours(0, 0, 0, 0)
-    //             + '<br>' + d.toLocaleDateString()
-    //             + '<br>' + d.toLocaleDateString(undefined, {month: 'long'})
-    //             + '<br>' + d.toLocaleDateString('it', {month: 'long'})
-    //             + '<br> 8-)');
-    // }());
-
-    // Debugging
-    (function () {
-        im('messages: ' + data.messages.length
-                + '<br>' + chat.config.data.messages.length
-                + '<br>' + chat.config.data.nested.length
-                + '<br>' + Number.MAX_SAFE_INTEGER
-                + '<br> :-)');
-    }());
 
     chat.input = input(null, function (event) {
         if (13 !== event.keyCode) {

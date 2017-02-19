@@ -1801,26 +1801,6 @@ function init() {
         down();
     }
 
-    // Debugging
-    // (function () {
-    //     var d = new Date();
-    //     im(Date.now()
-    //             + '<br>' + d.getTime()
-    //             + '<br>' + d.setHours(0, 0, 0, 0)
-    //             + '<br>' + d.toLocaleDateString()
-    //             + '<br>' + d.toLocaleDateString(undefined, {month: 'long'})
-    //             + '<br>' + d.toLocaleDateString('it', {month: 'long'})
-    //             + '<br> 8-)');
-    // }());
-
-    // Debugging
-    (function () {
-        im('messages: ' + data.messages.length
-                + '<br>' + chat.config.data.messages.length
-                + '<br>' + chat.config.data.nested.length
-                + '<br>' + Number.MAX_SAFE_INTEGER
-                + '<br> :-)');
-    }());
 
     chat.input = input(null, function (event) {
         if (13 !== event.keyCode) {
@@ -2038,7 +2018,8 @@ var nestMessages = (function () {
 function getDayString(d) {
     d = +d.key;
     var date = new Date(d);
-    var today = new Date().setHours(0, 0, 0, 0);
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     var format = {
         //weekday: 'short',
@@ -2046,11 +2027,10 @@ function getDayString(d) {
         month: 'long',
         day: 'numeric'
     };
-    if (date.getFullYear() !== new Date(today).getFullYear()) {
+    if (date.getFullYear() !== today.getFullYear()) {
         format.year = 'numeric';
     }
-    // var day = date.toLocaleDateString(this.config.locale, format);
-    var day = '' + d; // DEBUG
+    var day = date.toLocaleDateString(this.config.locale, format);
 
     if (d === today) {
         day = this.local('today') + ', ' + day;
