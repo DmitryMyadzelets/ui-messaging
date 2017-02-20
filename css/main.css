@@ -5,7 +5,8 @@ body {
     line-height: 18px;
     overflow-wrap: break-word;
     background-color: #B0BEC5;
-    maring: 5em;
+    padding: 0;
+    margin: 0;
 }
 
 
