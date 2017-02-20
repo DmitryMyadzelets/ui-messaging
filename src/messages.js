@@ -261,7 +261,7 @@ Messenger.prototype.updateMessages = function (parent) {
     left.append('div')
         .classed(classes.message_body, true)
         .html(function (d) {
-            var date = new Date(d);
+            var date = new Date(d.date);
             return d.cnt + ': ' + d.date
                     + '<br>date:' + date.getDate()
                     + '<br>' + d.body; // DEBUG
