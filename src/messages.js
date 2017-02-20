@@ -112,7 +112,7 @@ function Messenger(config) {
 
 
 function sortComparator(a, b) {
-    return b.date < a.date;
+    return +b.date < +a.date;
 }
 
 
