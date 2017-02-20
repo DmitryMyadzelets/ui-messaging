@@ -261,7 +261,7 @@ Messenger.prototype.updateMessages = function (parent) {
     left.append('div')
         .classed(classes.message_body, true)
         .html(function (d) {
-            return d.cnt + ': ' + d.body; // DEBUG
+            return d.cnt + ': ' + d.date + ' ' + d.body; // DEBUG
         });
 };
 
