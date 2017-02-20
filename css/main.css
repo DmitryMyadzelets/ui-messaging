@@ -5,8 +5,7 @@ body {
     line-height: 18px;
     overflow-wrap: break-word;
     background-color: #B0BEC5;
-    padding: 0;
-    margin: 0;
+    maring: 5em;
 }
 
 
@@ -22,34 +21,26 @@ header {
     /* where */
     position: fixed;
     top: 0;
-    width: 100%;
-    height: 40px;
+    right: 0;
+    left: 0;
+    height: 3em;
     /* how*/
     color: #ECEFF1;
     background-color: rgba(38, 50, 56, 0.9);
     box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px 0px;
+    display: table;
     padding: 0 16px;
     box-sizing: border-box;
 }
 
-header * {
-    margin: 0;
-    line-height: 40px; /* should be equal to the header height */
-    display: inline-block;
-    color: inherit;
-}
-
-header > div {
-    height: 40px;
+header > * {
+    display: table-cell;
+    vertical-align: middle;
 }
 
 header > a {
     color: inherit;
     text-align: right;
-}
-
-.pull-right {
-    float: right;
 }
 
 footer {
