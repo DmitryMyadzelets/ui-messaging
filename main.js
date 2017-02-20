@@ -2059,7 +2059,15 @@ function Messenger(config) {
 
 
 function sortComparator(a, b) {
-    return ('' + b.date) < ('' + a.date);
+    if (b.date < a.date) {
+        return 1;
+    }
+    if (b.date > a.date) {
+        return -1;
+    }
+    return 0;
+    // return (b.date > a.date) ? 1 : (b.date < a.date) ? -1 : 0;
+    // return b.date < a.date;
 }
 
 
