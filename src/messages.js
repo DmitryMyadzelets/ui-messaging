@@ -83,7 +83,8 @@ function getDayString(d) {
     if (date.getFullYear() !== today.getFullYear()) {
         format.year = 'numeric';
     }
-    var day = date.toLocaleDateString(this.config.locale, format);
+    // var day = date.toLocaleDateString(this.config.locale, format);
+    var day = [date.getDate(), date.getMonth(), date.getFullYear()].join(' ');
 
     if (d === today.getTime()) {
         day = this.local('today') + ', ' + day;
