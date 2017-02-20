@@ -26,6 +26,7 @@ var l10n = require('./l10n');
 //         }]
 // }]
 var nestMessages = (function () {
+    var cnt; // DEBUG
     // Nests a message into array considering its author
     function nestAuthor(message, array) {
         var obj = array[array.length - 1] || {};
@@ -36,6 +37,7 @@ var nestMessages = (function () {
             };
             array.push(obj);
         }
+        message.cnt = cnt; // DEBUG
         obj.values.push(message);
     }
 
@@ -58,8 +60,10 @@ var nestMessages = (function () {
     }
 
     return function (messages) {
+        cnt = 0; // DEBUG
         var array = [], i, l = messages.length;
         for (i = 0; i < l; i += 1) {
+            cnt ++;
             nestDay(messages[i], array);
         }
         return array;
@@ -257,7 +261,7 @@ Messenger.prototype.updateMessages = function (parent) {
     left.append('div')
         .classed(classes.message_body, true)
         .html(function (d) {
-            return d.body;
+            return d.cnt + ': ' + d.body; // DEBUG
         });
 };
 
