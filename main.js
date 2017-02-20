@@ -1973,7 +1973,6 @@ var l10n = require('./l10n');
 //         }]
 // }]
 var nestMessages = (function () {
-    var cnt; // DEBUG
     // Nests a message into array considering its author
     function nestAuthor(message, array) {
         var obj = array[array.length - 1] || {};
@@ -1984,7 +1983,6 @@ var nestMessages = (function () {
             };
             array.push(obj);
         }
-        message.cnt = cnt; // DEBUG
         obj.values.push(message);
     }
 
@@ -2007,10 +2005,8 @@ var nestMessages = (function () {
     }
 
     return function (messages) {
-        cnt = 0; // DEBUG
         var array = [], i, l = messages.length;
         for (i = 0; i < l; i += 1) {
-            cnt ++;
             nestDay(messages[i], array);
         }
         return array;
@@ -2034,8 +2030,7 @@ function getDayString(d) {
     if (date.getFullYear() !== today.getFullYear()) {
         format.year = 'numeric';
     }
-    // var day = date.toLocaleDateString(this.config.locale, format);
-    var day = [date.getDate(), date.getMonth(), date.getFullYear()].join(' ');
+    var day = date.toLocaleDateString(this.config.locale, format);
 
     if (d === today.getTime()) {
         day = this.local('today') + ', ' + day;
@@ -2066,8 +2061,6 @@ function sortComparator(a, b) {
         return -1;
     }
     return 0;
-    // return (b.date > a.date) ? 1 : (b.date < a.date) ? -1 : 0;
-    // return b.date < a.date;
 }
 
 
@@ -2079,7 +2072,6 @@ Messenger.prototype.update = function () {
 
     var messages = config.data.messages.sort(sortComparator);
     var nested = nestMessages(messages);
-    config.data.nested = nested; // DEBUG
 
     var root = d3.select(config.ids.messages);
 
@@ -2216,10 +2208,7 @@ Messenger.prototype.updateMessages = function (parent) {
     left.append('div')
         .classed(classes.message_body, true)
         .html(function (d) {
-            var date = new Date(d.date);
-            return d.cnt + ': ' + d.date
-                    + '<br>date:' + date.getDate()
-                    + '<br>' + d.body; // DEBUG
+            return d.body;
         });
 };
 
