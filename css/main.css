@@ -21,26 +21,35 @@ header {
     /* where */
     position: fixed;
     top: 0;
-    right: 0;
     left: 0;
-    height: 3em;
+    right: 0;
+    height: 40px;
     /* how*/
     color: #ECEFF1;
     background-color: rgba(38, 50, 56, 0.9);
     box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px 0px;
-    display: table;
     padding: 0 16px;
     box-sizing: border-box;
 }
 
-header > * {
-    display: table-cell;
-    vertical-align: middle;
+header * {
+    margin: 0;
+    line-height: 40px; /* should be equal to the header height */
+    display: inline-block;
+    color: inherit;
+}
+
+header > div {
+    height: 40px;
 }
 
 header > a {
     color: inherit;
     text-align: right;
+}
+
+.pull-right {
+    float: right;
 }
 
 footer {

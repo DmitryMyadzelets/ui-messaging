@@ -1755,12 +1755,14 @@ function onscroll(element, callback) {
 
 
 function init() {
+    var container = document;
+
     var chat = messaging.chat({
         me: me,
         data: data
     });
 
-    var scrollme = scroller.bind(document);
+    var scrollme = scroller.bind(container);
 
     // Scrolls the element down
     var down = (function () {
@@ -1830,7 +1832,7 @@ function init() {
     });
 
 
-    onscroll(document, function (o) {
+    onscroll(container, function (o) {
         if (o.y === 0) {
 
             // Get the day of an oldest message
