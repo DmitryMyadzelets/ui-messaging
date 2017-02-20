@@ -9,6 +9,8 @@ body {
 }
 
 
+/*Mobile web app framework: https://github.com/twbs/ratchet/ */
+
 div {
     box-sizing: border-box;
     overflow: hidden;
@@ -19,7 +21,8 @@ header {
     /* where */
     position: fixed;
     top: 0;
-    width: 100%;
+    right: 0;
+    left: 0;
     height: 3em;
     /* how*/
     color: #ECEFF1;
