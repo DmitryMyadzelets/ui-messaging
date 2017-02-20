@@ -29,6 +29,7 @@ header {
     color: #ECEFF1;
     background-color: rgba(38, 50, 56, 0.9);
     box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px 0px;
+    /* Seems table only has no side effects on Android Browser when zoomed in/out */
     display: table;
     padding: 0 16px;
     box-sizing: border-box;
