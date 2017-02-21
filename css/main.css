@@ -37,7 +37,7 @@ header {
     z-index: 1;
     /* how*/
     color: #ECEFF1;
-    background-color: rgba(38, 50, 56, 0.9);
+    background-color: rgba(38, 50, 56, 1);
     box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px 0px;
     /* Seems table only has no side effects on Android Browser when zoomed in/out */
     padding: 0 16px;
@@ -63,8 +63,8 @@ header a {
 section {
     /* where */
     position: absolute;
-    top: 0;
-    bottom: 0;
+    top: 40px; /*must be equal to header height */
+    bottom: 80px; /*must be equal to footer height*/
     left: 0;
     right: 0;
     z-index: 0;
@@ -74,22 +74,12 @@ section {
 
 footer {
     /* where */
-    position: fixed;
-    left: 0;
-    right: 0;
+    position: absolute;
+    width: 100%;
     bottom: 0;
-    /*margin-left: auto;*/
-    /*margin-right: auto;*/
+    height: 80px;
     /* how */
     /*max-width: 40em;*/
-    /*padding: 8px;*/
-    /*background-color: white;*/
-    /*border-top: solid 1px #546E7A;*/
-}
-
-.wrap-input {
-    margin: 0 auto;
-    max-width: 40em;
     padding: 8px;
     background-color: white;
     border-top: solid 1px #546E7A;
@@ -107,21 +97,19 @@ footer {
 
 #input_message {
     /* where */
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
     /* how */
     /* essential */
+    max-width: 40em;
     overflow-x: none;
     overflow-y: auto;
     word-wrap: break-word;
     /* optional */
-    height: 4em;
-    /*height: 100%;*/
-    padding: 0.3em 1em;
+    /*height: 4em;*/
+    padding: 0 1em;
+    height: 100%;
     /* disables focus rectangle */
     outline: 0;
-    border-radius: 2px;
-    background-color: white;
 }
 
 
