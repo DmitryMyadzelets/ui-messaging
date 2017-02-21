@@ -94,7 +94,7 @@ function onscroll(element, callback) {
 
 
 function init() {
-    var container = d3.select('section').node();
+    var container = d3.select(document).node();
 
     var chat = messaging.chat({
         me: me,
