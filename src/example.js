@@ -81,10 +81,11 @@ function onscroll(element, callback) {
         locked = false;
     }
 
+    var scrollme = scroller.bind(element);
     d3.select(element).on('scroll', function () {
         // var ev = d3.event;
         if (!locked) {
-            o = scroller.of(element).get();
+            o = scrollme.get();
             d3.timeout(tick);
         }
         locked = true;
@@ -93,7 +94,7 @@ function onscroll(element, callback) {
 
 
 function init() {
-    var container = document;
+    var container = d3.select('section').node();
 
     var chat = messaging.chat({
         me: me,
