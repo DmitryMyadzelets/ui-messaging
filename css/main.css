@@ -89,9 +89,9 @@ footer {
     margin: 0 auto;
     max-width: 40em;
     /* Top padding is equal to the height of the header */
-    padding-top: 4em;
+    /*padding-top: 4em;*/
     /* Bottom padding is equal to the height of the footer */
-    padding-bottom: 6em;
+    /*padding-bottom: 6em;*/
     background-color: white;
 }
 
