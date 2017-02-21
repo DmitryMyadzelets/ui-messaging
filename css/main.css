@@ -17,6 +17,11 @@ div {
     overflow: hidden;
 }
 
+.pull-right {
+    position: absolute;
+    right: 0;
+}
+
 section, header, footer {
     box-sizing: border-box;
     overflow: hidden;
@@ -38,17 +43,21 @@ header {
     padding: 0 16px;
 }
 
-header > * {
+header > div {
+    height: 40px;
     display: inline-block;
 }
 
 header h1 {
+    margin: 0;
     font-weight: 400;
+    line-height: 40px;
 }
 
-header > a {
+header a {
     color: inherit;
-    text-align: right;
+    line-height: 40px;
+    margin-right: 16px;
 }
 
 section {
